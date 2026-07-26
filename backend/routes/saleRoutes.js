@@ -4,6 +4,7 @@ const router = express.Router();
 
 const {
   createSale,
+  getSaleById,
 } = require("../controllers/saleController");
 
 router.post("/", createSale);
