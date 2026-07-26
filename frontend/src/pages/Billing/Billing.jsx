@@ -8,7 +8,7 @@ import Cart from "../../components/billing/Cart";
 import BillSummary from "../../components/billing/BillSummary";
 import ProductSearch from "../../components/billing/ProductSearch";
 import api from "../../services/api";
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 
 function Billing() {
   const navigate = useNavigate();
