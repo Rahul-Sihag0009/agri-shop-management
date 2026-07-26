@@ -1,53 +1,98 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 export default function useBilling() {
+  const [cart, setCart] = useState([]);
 
-    const [cart, setCart] = useState([]);
+  // Add Product
+  const addToCart = (product) => {
+    setCart((prev) => {
+      const existing = prev.find((item) => item.id === product.id);
 
-    const addToCart = (product) => {
-
-        const existing = cart.find(
-            item => item.id === product.id
+      if (existing) {
+        return prev.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: item.quantity + 1 }
+            : item
         );
+      }
 
-        if(existing){
+      return [...prev, {
+  ...product,
+  quantity: 1,
+  quantityInStock: product.quantity,
+}];
+    });
+  };
 
-            setCart(
+  // Increase Quantity
+  const increaseQty = (id) => {
+  setCart((prev) =>
+    prev.map((item) => {
+      if (item.id !== id) return item;
 
-                cart.map(item=>
+      if (item.quantity >= item.quantityInStock) {
+        return item;
+      }
 
-                    item.id===product.id
-                    ? {
-                        ...item,
-                        quantity:item.quantity+1
-                      }
-                    : item
-                )
+      return {
+        ...item,
+        quantity: item.quantity + 1,
+      };
+    })
+  );
+};
 
-            );
+  // Decrease Quantity
+  const decreaseQty = (id) => {
+    setCart((prev) =>
+      prev
+        .map((item) =>
+          item.id === id
+            ? { ...item, quantity: item.quantity - 1 }
+            : item
+        )
+        .filter((item) => item.quantity > 0)
+    );
+  };
 
-        }
+  // Remove Product
+  const removeItem = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
 
-        else{
+  // Clear Cart
+  const clearCart = () => {
+    setCart([]);
+  };
 
-            setCart([
-                ...cart,
-                {
-                    ...product,
-                    quantity:1
-                }
-            ]);
+  // Totals
+  const subtotal = useMemo(() => {
+    return cart.reduce(
+      (sum, item) => sum + item.quantity * item.sellingPrice,
+      0
+    );
+  }, [cart]);
 
-        }
+  const gst = useMemo(() => {
+    return cart.reduce(
+      (sum, item) =>
+        sum +
+        (item.quantity * item.sellingPrice * item.gst) / 100,
+      0
+    );
+  }, [cart]);
 
-    };
+  const grandTotal = useMemo(() => subtotal + gst, [subtotal, gst]);
 
-    return{
-
-        cart,
-
-        addToCart
-
-    };
-
+  return {
+    cart,
+    addToCart,
+    increaseQty,
+    decreaseQty,
+    removeItem,
+    clearCart,
+    subtotal,
+    gst,
+    grandTotal,
+  };
 }
