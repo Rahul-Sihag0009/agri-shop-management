@@ -1,6 +1,7 @@
 function PaymentSection({
   paymentMode,
   setPaymentMode,
+  handleGenerateInvoice,
 }) {
   return (
     <div className="bg-white shadow rounded p-4 mt-5">
@@ -21,6 +22,7 @@ function PaymentSection({
       </select>
 
 <button
+  onClick={handleGenerateInvoice}
   className="mt-6 bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg w-full text-lg font-semibold"
 >
   Generate Invoice

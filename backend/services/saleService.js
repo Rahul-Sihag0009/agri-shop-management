@@ -71,7 +71,33 @@ const createSale = async ({ customer, paymentMode, items }) => {
         grandTotal: subtotal + gst,
       },
     });
+const getSaleById = async (id) => {
 
+  return prisma.sale.findUnique({
+
+    where: {
+      id: Number(id),
+    },
+
+    include: {
+
+      customer: true,
+
+      items: {
+
+        include: {
+
+          product: true,
+
+        },
+
+      },
+
+    },
+
+  });
+
+};
     for (const item of productData) {
 
       await tx.saleItem.create({
@@ -114,4 +140,5 @@ const createSale = async ({ customer, paymentMode, items }) => {
 
 module.exports = {
   createSale,
+  getSaleById,
 };

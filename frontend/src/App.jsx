@@ -10,6 +10,7 @@ import Customers from "./pages/Customers/Customers";
 import Suppliers from "./pages/Suppliers/Suppliers";
 import Reports from "./pages/Reports/Reports";
 import Settings from "./pages/Settings/Settings";
+import Invoice from "./pages/Invoice/Invoice";
 
 function App() {
   return (
@@ -37,6 +38,8 @@ function App() {
         <Route path="/reports" element={<Reports />} />
 
         <Route path="/settings" element={<Settings />} />
+
+        <Route path="/invoice/:saleId" element={<Invoice />} />
 
       </Routes>
 

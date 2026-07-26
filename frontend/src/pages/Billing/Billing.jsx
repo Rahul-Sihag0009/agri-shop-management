@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import CustomerForm from "../../components/billing/CustomerForm";
 import PaymentSection from "../../components/billing/PaymentSection";
@@ -6,14 +7,18 @@ import useBilling from "../../hooks/useBilling";
 import Cart from "../../components/billing/Cart";
 import BillSummary from "../../components/billing/BillSummary";
 import ProductSearch from "../../components/billing/ProductSearch";
+import api from "../../services/api";
+import { toast } from "react-toastify";
 
 function Billing() {
+  const navigate = useNavigate();
   const {
   cart,
   addToCart,
   increaseQty,
   decreaseQty,
   removeItem,
+  clearCart,
   subtotal,
   gst,
   grandTotal,
@@ -26,6 +31,48 @@ const [customer, setCustomer] = useState({
 
   const [paymentMode, setPaymentMode] = useState("CASH");
 
+  const handleGenerateInvoice = async () => {
+
+  if (cart.length === 0) {
+    toast.error("Cart is empty");
+    return;
+  }
+
+  try {
+
+    const payload = {
+      customer,
+      paymentMode,
+      items: cart.map(item => ({
+        productId: item.id,
+        quantity: item.quantity,
+      })),
+    };
+
+    const res = await api.post("/sales", payload);
+
+    toast.success("Invoice Generated");
+
+navigate(`/invoice/${res.data.sale.id}`);
+
+    clearCart();
+
+    setCustomer({
+      name: "",
+      phone: "",
+    });
+
+    setPaymentMode("CASH");
+
+  } catch (err) {
+
+    toast.error(
+      err.response?.data?.message ||
+      "Invoice generation failed"
+    );
+
+  }
+};
 
   return (
   <div className="p-6">
@@ -54,9 +101,10 @@ const [customer, setCustomer] = useState({
     />
 
     <PaymentSection
-      paymentMode={paymentMode}
-      setPaymentMode={setPaymentMode}
-    />
+  paymentMode={paymentMode}
+  setPaymentMode={setPaymentMode}
+  handleGenerateInvoice={handleGenerateInvoice}
+/>
   </div>
 );
 }
