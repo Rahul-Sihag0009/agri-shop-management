@@ -5,6 +5,7 @@ const morgan = require("morgan");
 const productRoutes = require("./routes/productRoutes");
 const errorHandler = require("./middleware/errorHandler");
 const stockRoutes = require("./routes/stockRoutes");
+const saleRoutes = require("./routes/saleRoutes");
 dotenv.config();
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(errorHandler);
 app.use(express.json());
 app.use("/api/products", productRoutes);
 app.use("/api/stock", stockRoutes);
+app.use("/api/sales", saleRoutes);
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
