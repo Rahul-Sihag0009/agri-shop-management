@@ -1,38 +1,25 @@
-import { useEffect, useState } from "react";
-import api from "../../services/api";
+import { useMemo, useState } from "react";
+import useProducts from "../../hooks/useProducts";
 
 function ProductSearch({ addToCart }) {
   const [search, setSearch] = useState("");
-  const [products, setProducts] = useState([]);
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      if (!search.trim()) {
-        setProducts([]);
-        return;
-      }
+  const { products } = useProducts();
 
-      try {
-        const res = await api.get("/products", {
-          params: {
-            search,
-          },
-        });
+  const filteredProducts = useMemo(() => {
+    if (!search.trim()) return [];
 
-        setProducts(res.data.products);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    const timer = setTimeout(fetchProducts, 300);
-
-    return () => clearTimeout(timer);
-  }, [search]);
+    return products.filter(
+      (product) =>
+        product.quantity > 0 &&
+        product.productName
+          .toLowerCase()
+          .includes(search.toLowerCase())
+    );
+  }, [search, products]);
 
   return (
     <div className="bg-white shadow rounded p-4 mb-5">
-
       <h2 className="text-xl font-bold mb-3">
         Search Product
       </h2>
@@ -44,21 +31,27 @@ function ProductSearch({ addToCart }) {
         onChange={(e) => setSearch(e.target.value)}
       />
 
-      {products.length > 0 && (
+      {filteredProducts.length > 0 && (
         <div className="border rounded mt-2 max-h-64 overflow-y-auto">
-
-          {products.map((product) => (
+          {filteredProducts.map((product) => (
             <div
               key={product.id}
               onClick={() => {
                 addToCart(product);
                 setSearch("");
-                setProducts([]);
               }}
               className="p-3 border-b cursor-pointer hover:bg-green-100"
             >
-              <div className="font-semibold">
-                {product.productName}
+              <div className="flex justify-between items-center">
+                <div className="font-semibold">
+                  {product.productName}
+                </div>
+
+                {product.quantity <= 5 && (
+                  <span className="text-red-600 font-bold">
+                    Low Stock
+                  </span>
+                )}
               </div>
 
               <div className="text-sm text-gray-600">
@@ -66,10 +59,8 @@ function ProductSearch({ addToCart }) {
               </div>
             </div>
           ))}
-
         </div>
       )}
-
     </div>
   );
 }

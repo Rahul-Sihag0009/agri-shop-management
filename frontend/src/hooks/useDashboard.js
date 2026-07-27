@@ -1,29 +1,39 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
-export default function useProducts() {
-  const [products, setProducts] = useState([]);
+export default function useDashboard() {
+
+  const [stats, setStats] = useState(null);
+
   const [loading, setLoading] = useState(true);
 
-  const fetchProducts = async () => {
+  const fetchDashboard = async () => {
     try {
-      const res = await api.get("/products");
 
-      setProducts(res.data.products);
+      const res = await api.get("/dashboard");
+
+      setStats(res.data);
+
     } catch (err) {
+
       console.error(err);
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   useEffect(() => {
-    fetchProducts();
+
+    fetchDashboard();
+
   }, []);
 
   return {
-    products,
+    stats,
     loading,
-    fetchProducts,
+    refresh: fetchDashboard,
   };
 }

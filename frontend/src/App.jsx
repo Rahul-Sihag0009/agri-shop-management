@@ -1,5 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-
+import { Routes, Route } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
@@ -14,15 +13,14 @@ import Invoice from "./pages/Invoice/Invoice";
 
 function App() {
   return (
-    <BrowserRouter>
-
+    <>
       <Toaster
-    position="top-right"
-    reverseOrder={false}
-  />
+        position="top-right"
+        reverseOrder={false}
+      />
 
       <Routes>
-
+        
         <Route path="/" element={<Dashboard />} />
 
         <Route path="/products" element={<Products />} />
@@ -42,8 +40,7 @@ function App() {
         <Route path="/invoice/:saleId" element={<Invoice />} />
 
       </Routes>
-
-    </BrowserRouter>
+    </>
   );
 }
 
