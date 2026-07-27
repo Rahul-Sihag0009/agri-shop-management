@@ -10,6 +10,7 @@ import Loading from "../../components/ui/Loading";
 import StatCard from "../../components/ui/StatCard";
 
 import useDashboardQuery from "../../hooks/useDashboardQuery";
+import { FaChartLine } from "react-icons/fa";
 function Dashboard() {
   const {
   data: stats,
@@ -77,6 +78,13 @@ function Dashboard() {
           icon={<FaExclamationTriangle />}
           color="text-red-800"
         />
+
+        <StatCard
+    title="Profit"
+    value={`₹${(stats.profit ?? 0).toLocaleString("en-IN")}`}
+    icon={<FaChartLine />}
+    color="text-green-700"
+/>
 
       </div>
 

@@ -7,6 +7,7 @@ import {
   FaTruck,
   FaChartBar,
   FaCog,
+  FaShoppingBasket,
 } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
@@ -16,6 +17,7 @@ const menu = [
   { name: "Products", icon: <FaBoxOpen />, path: "/products" },
   { name: "Inventory", icon: <FaWarehouse />, path: "/inventory" },
   { name: "Billing", icon: <FaFileInvoiceDollar />, path: "/billing" },
+  { name: "Purchase", icon: <FaShoppingBasket />, path: "/purchase" },
   { name: "Customers", icon: <FaUsers />, path: "/customers" },
   { name: "Suppliers", icon: <FaTruck />, path: "/suppliers" },
   { name: "Reports", icon: <FaChartBar />, path: "/reports" },

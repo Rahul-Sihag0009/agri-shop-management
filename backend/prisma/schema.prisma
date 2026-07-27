@@ -44,6 +44,7 @@ model Product {
 
   stockHistory StockHistory[]
   saleItems    SaleItem[]
+  purchaseItems PurchaseItem[]
 }
 
 model StockHistory {
@@ -116,4 +117,38 @@ model SaleItem {
   sale Sale @relation(fields: [saleId], references: [id], onDelete: Cascade)
 
   product Product @relation(fields: [productId], references: [id])
+}
+
+model Supplier {
+  id        Int        @id @default(autoincrement())
+  name      String
+  phone     String?    @unique
+  email     String?
+  address   String?
+  createdAt DateTime   @default(now())
+
+  purchases Purchase[]
+}
+
+model Purchase {
+  id          Int            @id @default(autoincrement())
+  invoiceNo   String         @unique
+  supplierId  Int
+  totalAmount Float
+  createdAt   DateTime       @default(now())
+
+  supplier     Supplier      @relation(fields: [supplierId], references: [id])
+  purchaseItems PurchaseItem[]
+}
+
+model PurchaseItem {
+  id          Int      @id @default(autoincrement())
+  purchaseId  Int
+  productId   Int
+  quantity    Int
+  costPrice   Float
+  total       Float
+
+  purchase Purchase @relation(fields: [purchaseId], references: [id])
+  product  Product  @relation(fields: [productId], references: [id])
 }
