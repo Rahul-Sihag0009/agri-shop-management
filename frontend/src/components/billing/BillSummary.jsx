@@ -12,19 +12,19 @@ function BillSummary({
 
       <div className="flex justify-between mb-2">
         <span>Subtotal</span>
-        <span>${subtotal.toFixed(2)}</span>
+        <span>₹{subtotal.toFixed(2)}</span>
       </div>
 
       <div className="flex justify-between mb-2">
         <span>GST</span>
-        <span>${gst.toFixed(2)}</span>
+        <span>₹{gst.toFixed(2)}</span>
       </div>
 
       <hr />
 
       <div className="flex justify-between font-bold text-xl mt-3">
         <span>Grand Total</span>
-        <span>${grandTotal.toFixed(2)}</span>
+        <span>₹{grandTotal.toFixed(2)}</span>
       </div>
     </div>
   );

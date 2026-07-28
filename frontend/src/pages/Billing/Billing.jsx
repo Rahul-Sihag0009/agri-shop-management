@@ -37,6 +37,19 @@ const [customer, setCustomer] = useState({
     toast.error("Cart is empty");
     return;
   }
+  if(customer.phone){
+
+  if(!/^[6-9]\d{9}$/.test(customer.phone)){
+
+    toast.error(
+      "Enter a valid 10 digit mobile number"
+    );
+
+    return;
+
+  }
+
+}
 
   try {
 

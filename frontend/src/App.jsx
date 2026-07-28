@@ -5,11 +5,11 @@ import Products from "./pages/Products/Products";
 import Inventory from "./pages/Inventory/Inventory";
 import Billing from "./pages/Billing/Billing";
 import Customers from "./pages/Customers/Customers";
-import Suppliers from "./pages/Suppliers/Suppliers";
+
 import Reports from "./pages/Reports/Reports";
 import Settings from "./pages/Settings/Settings";
 import Invoice from "./pages/Invoice/Invoice";
-import Purchase from "./pages/Purchase/Purchase";
+
 import Login from "./pages/Login/Login";
 import Users from "./pages/Users/Users";
 
@@ -69,28 +69,6 @@ function App() {
           </ProtectedRoute>
         }
       />
-
-      <Route
-    path="/suppliers"
-    element={
-        <RoleProtectedRoute
-            allowedRoles={["ADMIN"]}
-        >
-            <Suppliers />
-        </RoleProtectedRoute>
-    }
-/>
-
-      <Route
-    path="/purchase"
-    element={
-        <RoleProtectedRoute
-            allowedRoles={["ADMIN"]}
-        >
-            <Purchase />
-        </RoleProtectedRoute>
-    }
-/>
 
       <Route
     path="/reports"

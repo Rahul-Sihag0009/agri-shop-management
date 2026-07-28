@@ -2,13 +2,18 @@ import { useEffect, useState } from "react";
 import Layout from "../../components/layout/Layout";
 import Loading from "../../components/ui/Loading";
 
-import useSettings from "../../hooks/useSettings";
-import useUpdateSettings from "../../hooks/useUpdateSettings";
+import useShop from "../../hooks/useShop";
+import useUpdateShop from "../../hooks/useUpdateShop";
+import useUploadLogo from "../../hooks/useUploadLogo";
 
 function Settings() {
-  const { data, isLoading } = useSettings();
+  const { data, isLoading } = useShop();
 
-  const updateMutation = useUpdateSettings();
+  const updateMutation = useUpdateShop();
+
+  const uploadLogoMutation = useUploadLogo();
+
+const [selectedLogo, setSelectedLogo] = useState(null);
 
   const [form, setForm] = useState({
     shopName: "",
@@ -41,6 +46,12 @@ function Settings() {
     updateMutation.mutate(form);
   };
 
+  const handleLogoUpload = () => {
+  if (!selectedLogo) return;
+
+  uploadLogoMutation.mutate(selectedLogo);
+};
+
   return (
     <Layout>
       <div className="max-w-4xl mx-auto bg-white shadow rounded-xl p-8">
@@ -48,6 +59,59 @@ function Settings() {
         <h1 className="text-3xl font-bold mb-6">
           Shop Settings
         </h1>
+
+        <div className="mb-8 border rounded-xl p-6 bg-gray-50">
+
+          <h2 className="text-xl font-semibold mb-4">
+          Shop Logo
+          </h2>
+
+        <div className="flex flex-col md:flex-row items-center gap-6">
+
+      <div>
+
+        {data?.logo ? (
+
+        <img
+  src={`http://localhost:5000${data.logo}`}
+  alt="Shop Logo"
+  className="w-40 h-40 rounded-xl border bg-white p-2 object-contain shadow"
+/>
+
+      ) : (
+
+        <div className="w-36 h-36 border rounded-lg flex items-center justify-center text-gray-400 bg-white">
+          No Logo
+        </div>
+
+      )}
+
+    </div>
+
+    <div className="flex flex-col gap-3">
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={(e) => setSelectedLogo(e.target.files[0])}
+      />
+
+      <button
+        type="button"
+        onClick={handleLogoUpload}
+        disabled={uploadLogoMutation.isPending}
+        className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg"
+      >
+        {uploadLogoMutation.isPending
+          ? "Uploading..."
+          : "Upload Logo"}
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
 
         <form
           onSubmit={handleSubmit}

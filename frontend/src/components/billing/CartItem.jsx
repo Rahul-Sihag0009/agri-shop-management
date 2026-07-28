@@ -10,7 +10,7 @@ function CartItem({
     <tr className="border-b">
       <td className="p-3">{item.productName}</td>
 
-      <td>${item.sellingPrice.toFixed(2)}</td>
+      <td>₹{item.sellingPrice.toFixed(2)}</td>
 
       <td>
         <button onClick={() => decreaseQty(item.id)}>
@@ -25,7 +25,7 @@ function CartItem({
       </td>
 
       <td>
-        ${(item.quantity * item.sellingPrice).toFixed(2)}
+        ₹{(item.quantity * item.sellingPrice).toFixed(2)}
       </td>
 
       <td>

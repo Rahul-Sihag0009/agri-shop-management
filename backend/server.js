@@ -7,14 +7,14 @@ const errorHandler = require("./middleware/errorHandler");
 const stockRoutes = require("./routes/stockRoutes");
 const saleRoutes = require("./routes/saleRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
-const supplierRoutes = require("./routes/supplierRoutes");
-const purchaseRoutes = require("./routes/purchaseRoutes");
+
 const reportRoutes =
 require("./routes/reportRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const authRoutes = require("./routes/authRoutes");
 const settingRoutes = require("./routes/settingRoutes");
 const userRoutes = require("./routes/userRoutes");
+const shopRoutes = require("./routes/shopRoutes");
 dotenv.config();
 
 const app = express();
@@ -22,12 +22,17 @@ const app = express();
 app.use(cors());
 
 app.use(express.json());
+const path = require("path");
+
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"))
+);
 app.use("/api/products", productRoutes);
 app.use("/api/stock", stockRoutes);
 app.use("/api/sales", saleRoutes);
 app.use("/api/dashboard", dashboardRoutes);
-app.use("/api/suppliers", supplierRoutes);
-app.use("/api/purchases", purchaseRoutes);
+
 app.use(
     "/api/reports",
     reportRoutes
@@ -36,6 +41,7 @@ app.use("/api/customers", customerRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/settings", settingRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/shop", shopRoutes);
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {

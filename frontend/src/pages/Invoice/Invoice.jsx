@@ -1,15 +1,25 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../services/api";
+
+import InvoiceHeader from "../../components/invoice/InvoiceHeader";
+import InvoiceItemsTable from "../../components/invoice/InvoiceItemsTable";
+import InvoiceInfo from "../../components/invoice/InvoiceInfo";
+import InvoiceSummary from "../../components/invoice/InvoiceSummary";
+import InvoiceFooter from "../../components/invoice/InvoiceFooter";
+import InvoiceActions from "../../components/invoice/InvoiceActions";
+
 import "./Invoice.css";
 
 function Invoice() {
   const { saleId } = useParams();
 
   const [invoice, setInvoice] = useState(null);
+  const [shop, setShop] = useState(null);
 
   useEffect(() => {
     fetchInvoice();
+    fetchShop();
   }, []);
 
   const fetchInvoice = async () => {
@@ -21,7 +31,16 @@ function Invoice() {
     }
   };
 
-  if (!invoice) {
+  const fetchShop = async () => {
+    try {
+      const res = await api.get("/shop");
+      setShop(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  if (!invoice || !shop) {
     return (
       <div className="p-10 text-center text-xl">
         Loading Invoice...
@@ -30,122 +49,38 @@ function Invoice() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto bg-white shadow-lg p-10 mt-10">
+    <div className="bg-gray-100 min-h-screen py-10">
 
-      <h1 className="text-4xl font-bold text-center">
-        AGRI SHOP
-      </h1>
+      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-6 invoice-container">
 
-      <p className="text-center text-gray-500">
-        Seeds • Fertilizers • Pesticides
-      </p>
+        <InvoiceHeader
+          shop={shop}
+          invoice={invoice}
+        />
 
-      <hr className="my-6" />
+        <InvoiceInfo
+          invoice={invoice}
+        />
 
-      <div className="grid grid-cols-2 gap-5">
+        <div className="space-y-1">
 
-        <div>
-          <p>
-            <strong>Invoice No:</strong>
-            {" "}
-            {invoice.invoiceNumber}
-          </p>
+  <InvoiceItemsTable
+    invoice={invoice}
+    shop={shop}
+  />
 
-          <p>
-            <strong>Date:</strong>
-            {" "}
-            {new Date(invoice.createdAt).toLocaleDateString()}
-          </p>
-        </div>
+  <InvoiceSummary
+    invoice={invoice}
+    shop={shop}
+  />
 
-        <div>
-          <p>
-            <strong>Customer:</strong>
-            {" "}
-            {invoice.customer?.name || "Walk-in Customer"}
-          </p>
+  <InvoiceFooter />
 
-          <p>
-            <strong>Phone:</strong>
-            {" "}
-            {invoice.customer?.phone || "-"}
-          </p>
-        </div>
-
-      </div>
-
-      <table className="w-full mt-8 border">
-
-        <thead className="bg-green-600 text-white">
-
-          <tr>
-
-            <th className="p-3">Product</th>
-
-            <th>Qty</th>
-
-            <th>Price</th>
-
-            <th>Total</th>
-
-          </tr>
-
-        </thead>
-
-        <tbody>
-
-          {invoice.items.map((item) => (
-
-            <tr key={item.id} className="border-b">
-
-              <td className="p-3">
-                {item.product.productName}
-              </td>
-
-              <td>{item.quantity}</td>
-
-              <td>₹{item.price}</td>
-
-              <td>₹{item.total}</td>
-
-            </tr>
-
-          ))}
-
-        </tbody>
-
-      </table>
-
-      <div className="mt-8 text-right">
-
-        <h3>
-          Subtotal :
-          {" "}
-          ₹{invoice.subtotal.toFixed(2)}
-        </h3>
-
-        <h3>
-          GST :
-          {" "}
-          ₹{invoice.gst.toFixed(2)}
-        </h3>
-
-        <h2 className="text-2xl font-bold mt-2">
-          Grand Total :
-          {" "}
-          ₹{invoice.grandTotal.toFixed(2)}
-        </h2>
-
-      </div>
-       
-       <div className="flex justify-center mt-8">
-  <button
-    onClick={() => window.print()}
-    className="bg-green-600 hover:bg-green-700 text-white px-8 py-3 rounded-lg"
-  >
-    Print Invoice
-  </button>
 </div>
+
+      </div>
+
+      <InvoiceActions />
 
     </div>
   );

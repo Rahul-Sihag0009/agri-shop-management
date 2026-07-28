@@ -28,12 +28,25 @@ function CustomerForm({
         />
 
         <input
-          name="phone"
-          placeholder="Phone Number"
-          className="border rounded p-3"
-          value={customer.phone}
-          onChange={handleChange}
-        />
+  name="phone"
+  value={customer.phone}
+  onChange={(e) => {
+
+    const value = e.target.value;
+
+    // allow only numbers
+    if (/^\d*$/.test(value)) {
+      setCustomer({
+        ...customer,
+        phone: value,
+      });
+    }
+
+  }}
+  maxLength="10"
+  placeholder="Mobile Number"
+  className="border rounded-lg p-3"
+/>
 
       </div>
 

@@ -23,21 +23,11 @@ const menu = [
 
   { name: "Billing", icon: <FaFileInvoiceDollar />, path: "/billing" },
 
-  {
-    name: "Purchase",
-    icon: <FaShoppingBasket />,
-    path: "/purchase",
-    roles: ["ADMIN"],
-  },
+  
 
   { name: "Customers", icon: <FaUsers />, path: "/customers" },
 
-  {
-    name: "Suppliers",
-    icon: <FaTruck />,
-    path: "/suppliers",
-    roles: ["ADMIN"],
-  },
+  
 
   {
     name: "Reports",

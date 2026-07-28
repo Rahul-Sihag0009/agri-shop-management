@@ -44,7 +44,7 @@ model Product {
 
   stockHistory StockHistory[]
   saleItems    SaleItem[]
-  purchaseItems PurchaseItem[]
+  
 }
 
 model StockHistory {
@@ -119,39 +119,7 @@ model SaleItem {
   product Product @relation(fields: [productId], references: [id])
 }
 
-model Supplier {
-  id        Int        @id @default(autoincrement())
-  name      String
-  phone     String?    @unique
-  email     String?
-  address   String?
-  createdAt DateTime   @default(now())
 
-  purchases Purchase[]
-}
-
-model Purchase {
-  id          Int            @id @default(autoincrement())
-  invoiceNo   String         @unique
-  supplierId  Int
-  totalAmount Float
-  createdAt   DateTime       @default(now())
-
-  supplier     Supplier      @relation(fields: [supplierId], references: [id])
-  purchaseItems PurchaseItem[]
-}
-
-model PurchaseItem {
-  id          Int      @id @default(autoincrement())
-  purchaseId  Int
-  productId   Int
-  quantity    Int
-  costPrice   Float
-  total       Float
-
-  purchase Purchase @relation(fields: [purchaseId], references: [id])
-  product  Product  @relation(fields: [productId], references: [id])
-}
 
 model User {
   id        Int      @id @default(autoincrement())
@@ -162,26 +130,27 @@ model User {
   createdAt DateTime @default(now())
 }
 
-model Setting {
-  id            Int      @id @default(autoincrement())
 
-  shopName      String
-  ownerName     String
 
-  phone         String
-  email         String
+model Shop {
+  id             Int      @id @default(autoincrement())
 
-  address       String
+  shopName       String
+  ownerName      String
 
-  gstNumber     String?
+  phone          String
+  email          String
 
-  invoicePrefix String @default("INV")
+  address        String
 
-  currency      String @default("₹")
+  gstNumber      String?
 
-  logo          String?
+  invoicePrefix  String   @default("INV")
 
-  createdAt     DateTime @default(now())
+  currency       String   @default("₹")
 
-  updatedAt     DateTime @updatedAt
+  logo           String?
+
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
 }

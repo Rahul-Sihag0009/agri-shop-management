@@ -2,6 +2,16 @@ const prisma = require("../config/prisma");
 const generateInvoiceNumber = require("../utils/invoiceGenerator");
 
 const createSale = async ({ customer, paymentMode, items }) => {
+if (customer?.phone) {
+
+    if (!/^[6-9]\d{9}$/.test(customer.phone)) {
+
+      throw new Error("Invalid mobile number");
+
+    }
+
+  }
+
   return prisma.$transaction(async (tx) => {
 
     let customerRecord = null;
