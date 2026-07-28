@@ -6,8 +6,11 @@ const{
     getSalesReport
 }=require("../controllers/reportController");
 
+const protect = require("../middleware/authMiddleware");
+
 router.get(
     "/sales",
+    protect,
     getSalesReport
 );
 

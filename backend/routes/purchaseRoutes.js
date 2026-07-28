@@ -6,6 +6,8 @@ const {
   createPurchase,
 } = require("../controllers/purchaseController");
 
-router.post("/", createPurchase);
+const protect = require("../middleware/authMiddleware");
+
+router.post("/", protect, createPurchase);
 
 module.exports = router;

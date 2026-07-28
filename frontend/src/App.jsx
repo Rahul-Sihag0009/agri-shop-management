@@ -1,5 +1,4 @@
-import { Routes, Route } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Products from "./pages/Products/Products";
@@ -11,45 +10,121 @@ import Reports from "./pages/Reports/Reports";
 import Settings from "./pages/Settings/Settings";
 import Invoice from "./pages/Invoice/Invoice";
 import Purchase from "./pages/Purchase/Purchase";
-import Reports from "./pages/Reports/Reports";
+import Login from "./pages/Login/Login";
+
+import ProtectedRoute from "./routes/ProtectedRoute";
+import RoleProtectedRoute from "./routes/RoleProtectedRoute";
 
 function App() {
   return (
-    <>
-      <Toaster
-        position="top-right"
-        reverseOrder={false}
+    <Routes>
+
+      {/* Login Route */}
+      <Route path="/login" element={<Login />} />
+
+      {/* Protected Routes */}
+      <Route
+        path="/"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
       />
 
-      <Routes>
+      <Route
+        path="/products"
+        element={
+          <ProtectedRoute>
+            <Products />
+          </ProtectedRoute>
+        }
+      />
 
-        <Route path="/" element={<Dashboard />} />
+      <Route
+        path="/inventory"
+        element={
+          <ProtectedRoute>
+            <Inventory />
+          </ProtectedRoute>
+        }
+      />
 
-        <Route path="/products" element={<Products />} />
+      <Route
+        path="/billing"
+        element={
+          <ProtectedRoute>
+            <Billing />
+          </ProtectedRoute>
+        }
+      />
 
-        <Route path="/inventory" element={<Inventory />} />
+      <Route
+        path="/customers"
+        element={
+          <ProtectedRoute>
+            <Customers />
+          </ProtectedRoute>
+        }
+      />
 
-        <Route path="/billing" element={<Billing />} />
-
-        <Route path="/customers" element={<Customers />} />
-
-        <Route path="/suppliers" element={<Suppliers />} />
-
-        <Route path="/reports" element={<Reports />} />
-
-        <Route path="/settings" element={<Settings />} />
-
-        <Route path="/invoice/:saleId" element={<Invoice />} />
-
-        <Route path="/purchase" element={<Purchase />} />
-
-        <Route
-    path="/reports"
-    element={<Reports />}
+      <Route
+    path="/suppliers"
+    element={
+        <RoleProtectedRoute
+            allowedRoles={["ADMIN"]}
+        >
+            <Suppliers />
+        </RoleProtectedRoute>
+    }
 />
 
-      </Routes>
-    </>
+      <Route
+    path="/purchase"
+    element={
+        <RoleProtectedRoute
+            allowedRoles={["ADMIN"]}
+        >
+            <Purchase />
+        </RoleProtectedRoute>
+    }
+/>
+
+      <Route
+    path="/reports"
+    element={
+        <RoleProtectedRoute
+            allowedRoles={["ADMIN"]}
+        >
+            <Reports />
+        </RoleProtectedRoute>
+    }
+/>
+
+      <Route
+    path="/settings"
+    element={
+        <RoleProtectedRoute
+            allowedRoles={["ADMIN"]}
+        >
+            <Settings />
+        </RoleProtectedRoute>
+    }
+/>
+
+      <Route
+        path="/invoice/:saleId"
+        element={
+          <ProtectedRoute>
+            <Invoice />
+          </ProtectedRoute>
+        }
+      />
+
+      {/* Unknown routes */}
+      <Route path="*" element={<Navigate to="/" replace />} />
+
+    </Routes>
   );
 }
 

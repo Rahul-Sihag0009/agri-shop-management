@@ -7,7 +7,9 @@ import ProductForm from "../../components/products/ProductForm";
 import ProductTable from "../../components/products/ProductTable";
 import api from "../../services/api";
 import useProducts from "../../hooks/useProducts";
-
+import PageHeader from "../../components/ui/PageHeader";
+import SearchBox from "../../components/ui/SearchBox";
+import { FaPlus } from "react-icons/fa";
 function Products() {
   
   
@@ -39,28 +41,31 @@ const deleteProduct = async (id) => {
 
   return (
     <Layout>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">Products</h1>
+      <PageHeader
+  title="Products"
+  subtitle="Manage your inventory products"
+  action={
+    <Button
+      onClick={() => {
+        setEditingProduct(null);
+        setOpen(true);
+      }}
+    >
+      <FaPlus className="inline mr-2" />
+      Add Product
+    </Button>
+  }
+/>
 
-        <Button
-  onClick={() => {
-    setEditingProduct(null);
-    setOpen(true);
-  }}
->
-          + Add Product
-        </Button>
-      </div>
+      <Card className="mb-6">
 
-      <div className="mb-6">
-  <input
-    type="text"
-    placeholder="Search by product, company or category..."
+  <SearchBox
     value={search}
     onChange={(e) => setSearch(e.target.value)}
-    className="w-full md:w-96 border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-green-500"
+    placeholder="Search by product name..."
   />
-</div>
+
+</Card>
 
       <Card>
         <ProductTable

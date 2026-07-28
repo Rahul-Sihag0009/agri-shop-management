@@ -10,14 +10,16 @@ const {
   deleteSupplier,
 } = require("../controllers/supplierController");
 
-router.get("/", getSuppliers);
+const protect = require("../middleware/authMiddleware");
 
-router.get("/:id", getSupplierById);
+router.get("/", protect, getSuppliers);
 
-router.post("/", createSupplier);
+router.get("/:id", protect, getSupplierById);
 
-router.put("/:id", updateSupplier);
+router.post("/", protect, createSupplier);
 
-router.delete("/:id", deleteSupplier);
+router.put("/:id", protect, updateSupplier);
+
+router.delete("/:id", protect, deleteSupplier);
 
 module.exports = router;

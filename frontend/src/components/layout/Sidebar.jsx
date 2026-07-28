@@ -11,20 +11,50 @@ import {
 } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
+import useAuth from "../../hooks/useAuth";
 
 const menu = [
   { name: "Dashboard", icon: <FaHome />, path: "/" },
+
   { name: "Products", icon: <FaBoxOpen />, path: "/products" },
+
   { name: "Inventory", icon: <FaWarehouse />, path: "/inventory" },
+
   { name: "Billing", icon: <FaFileInvoiceDollar />, path: "/billing" },
-  { name: "Purchase", icon: <FaShoppingBasket />, path: "/purchase" },
+
+  {
+    name: "Purchase",
+    icon: <FaShoppingBasket />,
+    path: "/purchase",
+    roles: ["ADMIN"],
+  },
+
   { name: "Customers", icon: <FaUsers />, path: "/customers" },
-  { name: "Suppliers", icon: <FaTruck />, path: "/suppliers" },
-  { name: "Reports", icon: <FaChartBar />, path: "/reports" },
-  { name: "Settings", icon: <FaCog />, path: "/settings" },
+
+  {
+    name: "Suppliers",
+    icon: <FaTruck />,
+    path: "/suppliers",
+    roles: ["ADMIN"],
+  },
+
+  {
+    name: "Reports",
+    icon: <FaChartBar />,
+    path: "/reports",
+    roles: ["ADMIN"],
+  },
+
+  {
+    name: "Settings",
+    icon: <FaCog />,
+    path: "/settings",
+    roles: ["ADMIN"],
+  },
 ];
 
 function Sidebar() {
+  const { user, logout } = useAuth();
   return (
     <div className="w-64 bg-green-700 text-white min-h-screen">
 
@@ -36,24 +66,32 @@ function Sidebar() {
 
       <div className="mt-4">
 
-        {menu.map((item) => (
-
-          <Link
-            key={item.name}
-            to={item.path}
-            className="flex items-center gap-3 px-6 py-4 hover:bg-green-600 transition"
-          >
-            {item.icon}
-
-            {item.name}
-
-          </Link>
-
-          
-
-        ))}
+        {menu
+  .filter(
+    (item) =>
+      !item.roles || item.roles.includes(user?.role)
+  )
+  .map((item) => (
+    <Link
+      key={item.name}
+      to={item.path}
+      className="flex items-center gap-3 px-6 py-4 hover:bg-green-600 transition"
+    >
+      {item.icon}
+      {item.name}
+    </Link>
+  ))}
 
       </div>
+ 
+        <div className="p-4 mt-auto">
+  <button
+    onClick={() => logout()}
+    className="w-full bg-red-600 hover:bg-red-700 text-white py-3 rounded-lg"
+  >
+    Logout
+  </button>
+</div>
 
     </div>
   );

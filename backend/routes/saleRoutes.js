@@ -7,6 +7,8 @@ const {
   getSaleById,
 } = require("../controllers/saleController");
 
-router.post("/", createSale);
-router.get("/:id", getSaleById);
+const protect = require("../middleware/authMiddleware");
+
+router.post("/", protect, createSale);
+router.get("/:id", protect, getSaleById);
 module.exports = router;

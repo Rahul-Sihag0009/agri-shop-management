@@ -11,6 +11,8 @@ const supplierRoutes = require("./routes/supplierRoutes");
 const purchaseRoutes = require("./routes/purchaseRoutes");
 const reportRoutes =
 require("./routes/reportRoutes");
+const customerRoutes = require("./routes/customerRoutes");
+const authRoutes = require("./routes/authRoutes");
 dotenv.config();
 
 const app = express();
@@ -28,6 +30,8 @@ app.use(
     "/api/reports",
     reportRoutes
 );
+app.use("/api/customers", customerRoutes);
+app.use("/api/auth", authRoutes);
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
