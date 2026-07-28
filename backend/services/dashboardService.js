@@ -94,31 +94,90 @@ const getLowStockProducts=async()=>{
 
 };
 
-const getTopSellingProducts=async()=>{
+const getTopSellingProducts = async () => {
 
-    return prisma.saleItem.groupBy({
+  const products = await prisma.saleItem.groupBy({
 
-        by:["productId"],
+    by: ["productId"],
 
-        _sum:{
-            quantity:true
+    _sum: {
+      quantity: true,
+    },
+
+    orderBy: {
+      _sum: {
+        quantity: "desc",
+      },
+    },
+
+    take: 5,
+  });
+
+  const result = await Promise.all(
+
+    products.map(async (item) => {
+
+      const product = await prisma.product.findUnique({
+
+        where: {
+          id: item.productId,
         },
 
-        orderBy:{
-            _sum:{
-                quantity:"desc"
-            }
+        select: {
+          productName: true,
         },
 
-        take:5
+      });
 
-    });
+      return {
 
+        id: item.productId,
+
+        productName: product?.productName || "Unknown",
+
+        quantitySold: item._sum.quantity,
+
+      };
+
+    })
+
+  );
+
+  return result;
+};
+
+const getMonthlySales = async () => {
+
+  const sales = await prisma.sale.findMany({
+    select: {
+      createdAt: true,
+      grandTotal: true,
+    },
+  });
+
+  const months = [
+    "Jan","Feb","Mar","Apr","May","Jun",
+    "Jul","Aug","Sep","Oct","Nov","Dec",
+  ];
+
+  const result = months.map((month) => ({
+    month,
+    sales: 0,
+  }));
+
+  sales.forEach((sale) => {
+    const monthIndex = new Date(sale.createdAt).getMonth();
+
+    result[monthIndex].sales += sale.grandTotal;
+  });
+
+  return result;
 };
 
 module.exports={
     getDashboardStats,
     getRecentSales,
     getLowStockProducts,
-    getTopSellingProducts
+    getTopSellingProducts,
+    getMonthlySales
 };

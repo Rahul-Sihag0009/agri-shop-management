@@ -6,12 +6,14 @@ const {
   getDashboardStats,
   getRecentSales,
   getLowStockProducts,
-  getTopSellingProducts
+  getTopSellingProducts,
+  getMonthlySales
 } = require("../controllers/dashboardController");
 
 router.get("/",getDashboardStats);
 router.get("/recent-sales",getRecentSales);
 router.get("/low-stock",getLowStockProducts);
 router.get("/top-products", getTopSellingProducts);
+router.get("/monthly-sales", getMonthlySales);
 
 module.exports=router;

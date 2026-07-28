@@ -74,9 +74,19 @@ const getTopSellingProducts = async (req, res, next) => {
 
 };
 
+const getMonthlySales = async (req, res, next) => {
+  try {
+    const data = await dashboardService.getMonthlySales();
+    res.json(data);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports={
     getDashboardStats,
     getRecentSales,
     getLowStockProducts,
-    getTopSellingProducts
+    getTopSellingProducts,
+    getMonthlySales
 };

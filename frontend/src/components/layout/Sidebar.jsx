@@ -8,6 +8,7 @@ import {
   FaChartBar,
   FaCog,
   FaShoppingBasket,
+  FaUserShield,
 } from "react-icons/fa";
 
 import { Link } from "react-router-dom";
@@ -51,6 +52,14 @@ const menu = [
     path: "/settings",
     roles: ["ADMIN"],
   },
+
+  {
+  name: "Users",
+  icon: <FaUserShield />,
+  path: "/users",
+  roles: ["ADMIN"],
+},
+
 ];
 
 function Sidebar() {

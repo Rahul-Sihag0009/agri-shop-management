@@ -11,9 +11,11 @@ import Settings from "./pages/Settings/Settings";
 import Invoice from "./pages/Invoice/Invoice";
 import Purchase from "./pages/Purchase/Purchase";
 import Login from "./pages/Login/Login";
+import Users from "./pages/Users/Users";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import RoleProtectedRoute from "./routes/RoleProtectedRoute";
+
 
 function App() {
   return (
@@ -121,6 +123,10 @@ function App() {
         }
       />
 
+      <Route
+    path="/users"
+    element={<Users />}
+/>
       {/* Unknown routes */}
       <Route path="*" element={<Navigate to="/" replace />} />
 

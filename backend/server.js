@@ -13,12 +13,14 @@ const reportRoutes =
 require("./routes/reportRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const authRoutes = require("./routes/authRoutes");
+const settingRoutes = require("./routes/settingRoutes");
+const userRoutes = require("./routes/userRoutes");
 dotenv.config();
 
 const app = express();
 
 app.use(cors());
-app.use(errorHandler);
+
 app.use(express.json());
 app.use("/api/products", productRoutes);
 app.use("/api/stock", stockRoutes);
@@ -32,6 +34,8 @@ app.use(
 );
 app.use("/api/customers", customerRoutes);
 app.use("/api/auth", authRoutes);
+app.use("/api/settings", settingRoutes);
+app.use("/api/users", userRoutes);
 app.use(morgan("dev"));
 
 app.get("/", (req, res) => {
@@ -40,6 +44,9 @@ app.get("/", (req, res) => {
         message: "Agri Shop Backend Running Successfully 🚀"
     });
 });
+
+app.use(errorHandler);
+
 
 const PORT = process.env.PORT || 5000;
 
