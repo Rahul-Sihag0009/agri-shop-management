@@ -2,21 +2,21 @@ function InvoiceItemsTable({ invoice, shop }) {
   return (
     <div className="overflow-x-auto">
 
-      <table className="w-full border border-gray-300 text-sm">
+      <table className="w-full border text-[10px]">
 
         <thead>
 
           <tr className="bg-green-700 text-white">
 
-            <th className="px-2 py-1 text-left text-sm">#</th>
+            <th className="px-1 py-0.5 text-left text-[10px]">#</th>
 
-            <th className="px-2 py-1 text-left text-sm">Product</th>
+            <th className="px-1 py-0.5 text-left text-[10px]">Product</th>
 
-            <th className="px-2 py-1 text-center text-sm">Qty</th>
+            <th className="px-1 py-0.5 text-center text-[10px]">Qty</th>
 
-            <th className="px-2 py-1 text-right text-sm">Rate</th>
+            <th className="px-1 py-0.5 text-right text-[10px]">Rate</th>
 
-            <th className="px-2 py-1 text-right text-sm">Amount</th>
+            <th className="px-1 py-0.5 text-right text-[10px]">Amount</th>
 
           </tr>
 
@@ -24,7 +24,7 @@ function InvoiceItemsTable({ invoice, shop }) {
 
         <tbody>
   {invoice.items.map((item, index) => (
-    <tr key={item.id} className="border-b">
+    <tr key={item.id} className="border-b border-gray-200">
 
       <td className="px-2 py-1">
         {index + 1}

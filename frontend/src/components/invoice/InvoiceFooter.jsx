@@ -1,16 +1,16 @@
 function InvoiceFooter() {
   return (
-    <div className="mt-0 pt-2">
+    <div className="mt-2 pt-1">
 
       <div className="flex justify-between items-end">
 
         <div>
 
-          <p className="font-semibold">
+          <p className="font-semibold text-[10px]">
             Thank you for your purchase!
           </p>
 
-          <p className="text-gray-500 mt-1 text-sm">
+          <p className="text-gray-500 text-[9px]">
             We appreciate your business and look forward to serving you again.
           </p>
 
@@ -18,9 +18,9 @@ function InvoiceFooter() {
 
         <div className="text-center">
 
-          <div className="border-t border-black w-40 mt-3"></div>
+          <div className="border-t border-black w-24 mt-3"></div>
 
-          <p className="mt-1 text-sm font-semibold">
+          <p className="mt-1 text-[9px] font-semibold">
             Authorized Signature
           </p>
 

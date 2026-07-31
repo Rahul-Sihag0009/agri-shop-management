@@ -74,13 +74,13 @@ export default function useBilling() {
   }, [cart]);
 
   const gst = useMemo(() => {
-    return cart.reduce(
-      (sum, item) =>
-        sum +
-        (item.quantity * item.sellingPrice * item.gst) / 100,
-      0
-    );
-  }, [cart]);
+  return cart.reduce(
+    (sum, item) =>
+      sum +
+      (item.quantity * item.purchasePrice * item.gst) / 100,
+    0
+  );
+}, [cart]);
 
   const grandTotal = useMemo(() => subtotal + gst, [subtotal, gst]);
 

@@ -49,9 +49,9 @@ function Invoice() {
   }
 
   return (
-    <div className="bg-gray-100 min-h-screen py-10">
+    <div className="invoice-page min-h-screen py-10">
 
-      <div className="max-w-5xl mx-auto bg-white shadow-xl rounded-xl p-6 invoice-container">
+      <div className="max-w-6xl mx-auto bg-white shadow rounded p-3 invoice-container">
 
         <InvoiceHeader
           shop={shop}
@@ -62,7 +62,7 @@ function Invoice() {
           invoice={invoice}
         />
 
-        <div className="space-y-1">
+        <div className="space-y-0">
 
   <InvoiceItemsTable
     invoice={invoice}

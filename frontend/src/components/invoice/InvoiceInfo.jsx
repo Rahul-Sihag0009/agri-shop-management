@@ -1,8 +1,8 @@
 function InvoiceInfo({ invoice }) {
   return (
-    <div className="border-b border-gray-300 pb-3 mb-4">
+    <div className="border-b pb-1 mb-1">
 
-      <div className="grid grid-cols-2 gap-6 text-sm">
+      <div className="grid-cols-2 gap-2 text-[10px]">
 
         <div>
 
@@ -13,7 +13,7 @@ function InvoiceInfo({ invoice }) {
             {invoice.customer?.name || "Walk-in Customer"}
           </p>
 
-          <p className="mt-1">
+          <p className="">
             <span className="font-semibold">
               Phone :
             </span>{" "}

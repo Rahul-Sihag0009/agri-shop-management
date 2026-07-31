@@ -58,17 +58,22 @@ if (customer?.phone) {
         );
       }
 
-      const total = product.sellingPrice * item.quantity;
+      // Selling amount
+const total = product.sellingPrice * item.quantity;
 
-      subtotal += total;
+// GST calculated on Purchase Price
+const itemGST =
+  (product.purchasePrice * item.quantity * product.gst) / 100;
 
-      gst += total * product.gst / 100;
+// Add to totals
+subtotal += total;
+gst += itemGST;
 
-      productData.push({
-        product,
-        quantity: item.quantity,
-        total,
-      });
+productData.push({
+  product,
+  quantity: item.quantity,
+  total,
+});
     }
 
     const sale = await tx.sale.create({

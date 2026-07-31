@@ -1,25 +1,28 @@
-body{
+.invoice-page{
     background:#f3f4f6;
 }
 
 .invoice-container{
-    width:210mm;
-    min-height:297mm;
+    width:100%;
+    max-width:200mm;
     margin:auto;
     background:#fff;
-    padding:12mm;
+    padding:5mm;
     box-sizing:border-box;
+    font-size:10px;
+    line-height:1.1;
 }
 
-table{
+.invoice-container table{
     border-collapse:collapse;
     width:100%;
 }
 
-th,
-td{
-    padding:8px;
-    font-size:13px;
+.invoice-container th,
+.invoice-container td{
+    padding:2px 4px;
+    font-size:10px;
+    line-height:1.1;
 }
 
 .print-hidden{
@@ -45,21 +48,21 @@ td{
         border:none;
     }
 
-    table{
-        page-break-inside:auto;
+    .invoice-container table{
+    page-break-inside:auto;
     }
 
-    tr{
-        page-break-inside:avoid;
-        page-break-after:auto;
+    .invoice-container tr{
+    page-break-inside:avoid;
+    page-break-after:auto;
     }
 
-    thead{
-        display:table-header-group;
+    .invoice-container thead{
+    display:table-header-group;
     }
 
     @page{
         size:A4;
-        margin:8mm;
+        margin:4mm;
     }
 }
