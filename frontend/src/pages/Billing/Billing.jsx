@@ -61,7 +61,7 @@ const [customer, setCustomer] = useState({
         quantity: item.quantity,
       })),
     };
-
+console.log(payload);
     const res = await api.post("/sales", payload);
 
     toast.success("Invoice Generated");

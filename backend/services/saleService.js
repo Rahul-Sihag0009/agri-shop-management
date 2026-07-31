@@ -76,16 +76,38 @@ productData.push({
 });
     }
 
-    const sale = await tx.sale.create({
-      data: {
-        invoiceNumber: generateInvoiceNumber(),
-        customerId: customerRecord?.id,
-        paymentMode,
-        subtotal,
-        gst,
-        grandTotal: subtotal + gst,
-      },
-    });
+// Get shop settings
+const shop = await tx.shop.findFirst();
+
+// Find the last sale
+const lastSale = await tx.sale.findFirst({
+  orderBy: {
+    invoiceSequence: "desc",
+  },
+});
+
+// Next sequence number
+const nextSequence = lastSale
+  ? lastSale.invoiceSequence + 1
+  : 1;
+
+// Generate invoice number
+const invoiceNumber = generateInvoiceNumber(
+  shop?.invoicePrefix || "INV",
+  nextSequence
+);
+
+const sale = await tx.sale.create({
+  data: {
+    invoiceNumber,
+    invoiceSequence: nextSequence,
+    customerId: customerRecord?.id,
+    paymentMode,
+    subtotal,
+    gst,
+    grandTotal: subtotal + gst,
+  },
+});
 
     for (const item of productData) {
 

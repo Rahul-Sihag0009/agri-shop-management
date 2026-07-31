@@ -32,15 +32,20 @@ function InvoiceInfo({ invoice }) {
           </p>
 
           <p className="mt-1">
-            <span className="font-semibold">
-              Status :
-            </span>
+  <span className="font-semibold">
+    Status :
+  </span>
 
-            <span className="text-green-600 font-semibold">
-              {" "}Paid
-            </span>
-
-          </p>
+  {invoice.paymentMode === "UNPAID" ? (
+    <span className="text-red-600 font-semibold">
+      {" "}Unpaid
+    </span>
+  ) : (
+    <span className="text-green-600 font-semibold">
+      {" "}Paid
+    </span>
+  )}
+</p>
 
         </div>
 

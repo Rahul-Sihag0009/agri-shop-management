@@ -35,13 +35,13 @@ function App() {
       />
 
       <Route
-        path="/products"
-        element={
-          <ProtectedRoute>
-            <Products />
-          </ProtectedRoute>
-        }
-      />
+  path="/products"
+  element={
+    <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+      <Products />
+    </RoleProtectedRoute>
+  }
+/>
 
       <Route
         path="/inventory"
@@ -64,9 +64,9 @@ function App() {
       <Route
         path="/customers"
         element={
-          <ProtectedRoute>
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
             <Customers />
-          </ProtectedRoute>
+          </RoleProtectedRoute>
         }
       />
 
@@ -102,8 +102,12 @@ function App() {
       />
 
       <Route
-    path="/users"
-    element={<Users />}
+  path="/users"
+  element={
+    <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+      <Users />
+    </RoleProtectedRoute>
+  }
 />
       {/* Unknown routes */}
       <Route path="*" element={<Navigate to="/" replace />} />

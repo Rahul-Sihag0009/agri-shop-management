@@ -2,7 +2,7 @@ const prisma = require("../config/prisma");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
-const register = async ({ name, email, password }) => {
+const register = async ({ name, email, password, role = "STAFF" }) => {
   const existingUser = await prisma.user.findUnique({
     where: { email },
   });
@@ -14,12 +14,13 @@ const register = async ({ name, email, password }) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
-  });
+  data: {
+    name,
+    email,
+    password: hashedPassword,
+    role,
+  },
+});
 
   return user;
 };

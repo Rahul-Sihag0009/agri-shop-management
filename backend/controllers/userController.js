@@ -29,8 +29,31 @@ const deleteUser = async (req, res, next) => {
   }
 };
 
+const changePassword = async (req, res, next) => {
+
+  try {
+
+    await userService.changePassword(
+      req.params.id,
+      req.body.password
+    );
+
+    res.json({
+      success: true,
+      message: "Password changed successfully",
+    });
+
+  } catch (err) {
+
+    next(err);
+
+  }
+
+};
+
 module.exports = {
   getUsers,
   createUser,
   deleteUser,
+  changePassword,
 };

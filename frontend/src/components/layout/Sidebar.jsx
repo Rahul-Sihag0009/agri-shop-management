@@ -17,7 +17,7 @@ import useAuth from "../../hooks/useAuth";
 const menu = [
   { name: "Dashboard", icon: <FaHome />, path: "/" },
 
-  { name: "Products", icon: <FaBoxOpen />, path: "/products" },
+  { name: "Products", icon: <FaBoxOpen />, path: "/products", roles: ["ADMIN"], },
 
   { name: "Inventory", icon: <FaWarehouse />, path: "/inventory" },
 
@@ -25,7 +25,7 @@ const menu = [
 
   
 
-  { name: "Customers", icon: <FaUsers />, path: "/customers" },
+  { name: "Customers", icon: <FaUsers />, path: "/customers", roles: ["ADMIN"], },
 
   
 

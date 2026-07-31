@@ -36,11 +36,17 @@ function CustomerDetails({ invoice }) {
         </p>
 
         <p>
-          <strong>Invoice Status:</strong>{" "}
-          <span className="text-green-600 font-semibold">
-            Paid
-          </span>
-        </p>
+  <strong>Invoice Status:</strong>{" "}
+  {invoice.paymentMode === "UNPAID" ? (
+    <span className="text-red-600 font-semibold">
+      Unpaid
+    </span>
+  ) : (
+    <span className="text-green-600 font-semibold">
+      Paid
+    </span>
+  )}
+</p>
 
       </div>
 

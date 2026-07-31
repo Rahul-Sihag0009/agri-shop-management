@@ -14,9 +14,12 @@ const {
 } = require("../controllers/productController");
 
 const protect = require("../middleware/authMiddleware");
+const adminOnly = require("../middleware/adminOnly");
 
 router.post(
   "/",
+  protect,
+  adminOnly,
   validateRequest(productSchema),
   addProduct
 );
@@ -27,10 +30,17 @@ router.get("/:id", protect, getProduct);
 
 router.put(
   "/:id",
+  protect,
+  adminOnly,
   validateRequest(productSchema),
   updateProduct
 );
 
-router.delete("/:id", protect, deleteProduct);
+router.delete(
+  "/:id",
+  protect,
+  adminOnly,
+  deleteProduct
+);
 
 module.exports = router;

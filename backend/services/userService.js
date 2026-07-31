@@ -17,6 +17,17 @@ const getUsers = async () => {
 };
 
 const createUser = async (data) => {
+
+  const existing = await prisma.user.findUnique({
+    where: {
+      email: data.email,
+    },
+  });
+
+  if (existing) {
+    throw new Error("Email already exists");
+  }
+
   const hashedPassword = await bcrypt.hash(data.password, 10);
 
   return prisma.user.create({
@@ -43,8 +54,24 @@ const deleteUser = async (id) => {
   });
 };
 
+const changePassword = async (id, password) => {
+
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  return prisma.user.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      password: hashedPassword,
+    },
+  });
+
+};
+
 module.exports = {
   getUsers,
   createUser,
   deleteUser,
+  changePassword,
 };

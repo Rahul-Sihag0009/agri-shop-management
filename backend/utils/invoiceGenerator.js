@@ -1,4 +1,5 @@
-function generateInvoiceNumber() {
+function generateInvoiceNumber(prefix, sequence) {
+
   const now = new Date();
 
   const year = now.getFullYear();
@@ -7,9 +8,10 @@ function generateInvoiceNumber() {
 
   const day = String(now.getDate()).padStart(2, "0");
 
-  const random = Math.floor(1000 + Math.random() * 9000);
+  const serial = String(sequence).padStart(4, "0");
 
-  return `INV-${year}${month}${day}-${random}`;
+  return `${prefix}-${year}${month}${day}-${serial}`;
+
 }
 
 module.exports = generateInvoiceNumber;

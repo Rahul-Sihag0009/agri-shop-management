@@ -11,15 +11,17 @@ function PaymentSection({
       </h2>
 
       <select
-        className="border rounded p-3 w-full"
-        value={paymentMode}
-        onChange={(e) => setPaymentMode(e.target.value)}
-      >
-        <option value="CASH">Cash</option>
-        <option value="UPI">UPI</option>
-        <option value="CARD">Card</option>
-        <option value="CREDIT">Credit</option>
-      </select>
+  className="border rounded p-3 w-full"
+  value={paymentMode}
+  onChange={(e) => {
+    console.log("Selected:", e.target.value);
+    setPaymentMode(e.target.value);
+  }}
+>
+  <option value="CASH">Cash</option>
+  <option value="UPI">UPI</option>
+  <option value="UNPAID">Unpaid</option>
+</select>
 
 <button
   onClick={handleGenerateInvoice}
