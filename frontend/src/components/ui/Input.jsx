@@ -11,6 +11,7 @@ const Input = React.forwardRef(
         <input
           ref={ref}
           type={type}
+          step={type === "number" ? "0.01" : undefined}
           {...props}
           className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-green-500"
         />

@@ -33,9 +33,20 @@ const deleteProduct = async (id) => {
   try {
     await api.delete(`/products/${id}`);
 
-    refresh();
+    alert("Product deleted successfully.");
+
+    try {
+      refresh();
+    } catch (err) {
+      console.log("Refresh Error:", err);
+    }
+
   } catch (error) {
-    console.error(error);
+    console.log("Delete Error:", error);
+
+    alert(
+      error.response?.data?.message || "Unable to delete product."
+    );
   }
 };
 

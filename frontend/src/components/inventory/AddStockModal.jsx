@@ -14,21 +14,27 @@ function AddStockModal({
     e.preventDefault();
 
     try {
-      await api.post("/stock/add", {
-        productId: product.id,
-        quantity: Number(quantity),
-        reason,
-        remarks,
-      });
+  await api.post("/stock/add", {
+    productId: product.id,
+    quantity: Number(quantity),
+    reason,
+    remarks,
+  });
 
-      alert("Stock Added Successfully");
+  alert("Stock Added Successfully");
 
-      onSuccess();
+  try {
+    onSuccess();
+  } catch (e) {
+    console.error("onSuccess error:", e);
+  }
 
-      onClose();
-    } catch (err) {
-      alert(err.response?.data?.message || "Something went wrong");
-    }
+  onClose();
+
+} catch (err) {
+  console.error(err);
+  alert(err.response?.data?.message || "Something went wrong");
+}
   };
 
   return (

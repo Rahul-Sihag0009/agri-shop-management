@@ -18,7 +18,7 @@ const productSchema = z.object({
 
   gst: z.coerce.number().min(0).max(100),
 
-  hsnCode: z.string().min(1),
+  hsnCode: z.string().optional(),
 
   minimumStock: z.coerce.number().int().nonnegative(),
 });

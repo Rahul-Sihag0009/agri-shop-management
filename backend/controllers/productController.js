@@ -92,6 +92,17 @@ const deleteProduct = async (req, res, next) => {
       message: "Product Deleted Successfully",
     });
   } catch (err) {
+    if (
+      err.message &&
+      err.message.includes("SaleItem_productId_fkey")
+    ) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "This product cannot be deleted because it has already been used in one or more invoices.",
+      });
+    }
+
     next(err);
   }
 };

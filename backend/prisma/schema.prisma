@@ -38,7 +38,7 @@ model Product {
   quantity      Int
   unit          String
   gst           Float
-  hsnCode       String
+  hsnCode       String?
   minimumStock  Int
   createdAt     DateTime @default(now())
 

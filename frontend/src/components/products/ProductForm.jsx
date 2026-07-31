@@ -69,12 +69,14 @@ function ProductForm({ onSuccess, initialData = null }) {
 
         <Input
           type="number"
+          step="0.01"
           label="Purchase Price"
           {...register("purchasePrice")}
         />
 
         <Input
           type="number"
+          step="0.01"
           label="Selling Price"
           {...register("sellingPrice")}
         />
@@ -92,6 +94,7 @@ function ProductForm({ onSuccess, initialData = null }) {
 
         <Input
           type="number"
+          step="0.01"
           label="GST"
           {...register("gst")}
         />

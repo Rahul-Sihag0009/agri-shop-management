@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import api from "../services/api";
 
-export default function useProducts() {
+export default function useProducts(search = "") {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const fetchProducts = async () => {
     try {
-      const res = await api.get("/products");
+      setLoading(true);
+
+      const res = await api.get("/products", {
+        params: {
+          search,
+        },
+      });
 
       setProducts(res.data.products);
     } catch (err) {
@@ -19,11 +25,11 @@ export default function useProducts() {
 
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [search]);
 
   return {
     products,
     loading,
-    fetchProducts,
+    refresh: fetchProducts,
   };
 }
