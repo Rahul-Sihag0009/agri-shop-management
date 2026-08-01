@@ -52,10 +52,51 @@ const deleteCustomer = async (id) => {
   });
 };
 
+const exportCustomerHistory = async (customerId) => {
+  const customer = await prisma.customer.findUnique({
+    where: {
+      id: Number(customerId),
+    },
+    include: {
+      sales: {
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          items: {
+            include: {
+              product: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!customer) {
+    throw new Error("Customer not found");
+  }
+
+  const history = customer.sales.map((sale) => ({
+    customerName: customer.name,
+    mobile: customer.phone,
+    billNo: sale.invoiceNumber,
+    purchaseDate: sale.createdAt,
+    products: sale.items
+      .map((item) => item.product.productName)
+      .join(", "),
+    amount: sale.grandTotal,
+  }));
+
+  return history;
+};
+
 module.exports = {
   getCustomers,
   getCustomerById,
   createCustomer,
   updateCustomer,
   deleteCustomer,
+  exportCustomerHistory,
+  
 };

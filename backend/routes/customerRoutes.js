@@ -11,11 +11,14 @@ const {
   createCustomer,
   updateCustomer,
   deleteCustomer,
+  exportCustomerHistory,
 } = require("../controllers/customerController");
 
 router.get("/", protect, adminOnly, getCustomers);
 
 router.get("/:id", protect, adminOnly, getCustomerById);
+
+router.get("/:id/export", exportCustomerHistory);
 
 router.post("/", protect, adminOnly, createCustomer);
 

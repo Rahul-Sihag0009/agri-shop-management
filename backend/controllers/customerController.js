@@ -82,10 +82,23 @@ const deleteCustomer = async (req, res, next) => {
   }
 };
 
+const exportCustomerHistory = async (req, res, next) => {
+  try {
+    const history = await customerService.exportCustomerHistory(
+      req.params.id
+    );
+
+    res.json(history);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   getCustomers,
   getCustomerById,
   createCustomer,
   updateCustomer,
   deleteCustomer,
+  exportCustomerHistory,
 };

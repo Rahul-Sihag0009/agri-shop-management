@@ -21,6 +21,7 @@ import RecentSalesTable from "../../components/dashboard/RecentSalesTable";
 import useRecentSales from "../../hooks/useRecentSales";
 import TopProductsTable from "../../components/dashboard/TopProductsTable";
 import useTopProducts from "../../hooks/useTopProducts";
+
 function Dashboard() {
   // Dashboard Statistics
   const {
@@ -133,12 +134,7 @@ function Dashboard() {
             color="text-red-800"
           />
 
-          <StatCard
-            title="Profit"
-            value={`₹${(stats.profit ?? 0).toLocaleString("en-IN")}`}
-            icon={<FaChartLine />}
-            color="text-green-700"
-          />
+
 
         </div>
 

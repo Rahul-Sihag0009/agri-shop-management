@@ -28,21 +28,13 @@ const getDashboardStats = async () => {
         }
     });
 
-    const saleItems = await prisma.saleItem.findMany();
-
-let profit = 0;
-
-saleItems.forEach((item) => {
-  profit +=
-    (item.price - item.costPrice) *
-    item.quantity;
-});
+    
 
     return{
 
         totalProducts,
-        profit: profit || 0,
 
+        
         lowStock,
 
         outOfStock,
