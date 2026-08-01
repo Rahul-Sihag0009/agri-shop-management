@@ -19,7 +19,15 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173", // Local development
+      "https://YOUR-VERCEL-APP.vercel.app", // Replace after frontend deployment
+    ],
+    credentials: true,
+  })
+);
 
 app.use(express.json());
 const path = require("path");
