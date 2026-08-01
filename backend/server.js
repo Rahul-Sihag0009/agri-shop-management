@@ -22,8 +22,8 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "http://localhost:5173", // Local development
-      "https://YOUR-VERCEL-APP.vercel.app", // Replace after frontend deployment
+      "http://localhost:5173",
+      "https://agri-shop-management.vercel.app",
     ],
     credentials: true,
   })
