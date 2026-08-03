@@ -1,19 +1,30 @@
-const express=require("express");
+const express = require("express");
 
-const router=express.Router();
+const router = express.Router();
+
+const protect = require("../middleware/authMiddleware");
 
 const {
   getDashboardStats,
   getRecentSales,
   getLowStockProducts,
   getTopSellingProducts,
-  getMonthlySales
+  getMonthlySales,
 } = require("../controllers/dashboardController");
 
-router.get("/",getDashboardStats);
-router.get("/recent-sales",getRecentSales);
-router.get("/low-stock",getLowStockProducts);
-router.get("/top-products", getTopSellingProducts);
-router.get("/monthly-sales", getMonthlySales);
+// Dashboard Stats
+router.get("/", protect, getDashboardStats);
 
-module.exports=router;
+// Recent Sales
+router.get("/recent-sales", protect, getRecentSales);
+
+// Low Stock Products
+router.get("/low-stock", protect, getLowStockProducts);
+
+// Top Selling Products
+router.get("/top-products", protect, getTopSellingProducts);
+
+// Monthly Sales
+router.get("/monthly-sales", protect, getMonthlySales);
+
+module.exports = router;
