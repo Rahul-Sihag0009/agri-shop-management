@@ -1,86 +1,45 @@
 const prisma = require("../config/prisma");
 
-const getShop = async () => {
-  let shop = await prisma.shop.findFirst();
-
-  if (!shop) {
-    shop = await prisma.shop.create({
-      data: {
-        shopName: "Agri Shop",
-        ownerName: "",
-        phone: "",
-        email: "",
-        address: "",
-        gstNumber: "",
-        invoicePrefix: "INV",
-        currency: "₹",
-      },
-    });
-  }
-
-  return shop;
+// ===========================
+// Get Shop
+// ===========================
+const getShop = async (shopId) => {
+  return prisma.shop.findUnique({
+    where: {
+      id: shopId,
+    },
+  });
 };
 
-const updateShop = async (data) => {
-  let shop = await prisma.shop.findFirst();
-
-  if (!shop) {
-    shop = await prisma.shop.create({
-      data: {
-        shopName: "Agri Shop",
-        ownerName: "",
-        phone: "",
-        email: "",
-        address: "",
-        gstNumber: "",
-        invoicePrefix: "INV",
-        currency: "₹",
-      },
-    });
-  }
-
+// ===========================
+// Update Shop
+// ===========================
+const updateShop = async (shopId, data) => {
   return prisma.shop.update({
     where: {
-      id: shop.id,
+      id: shopId,
     },
     data,
   });
 };
 
-const uploadLogo = async (logoPath) => {
-
-  let shop = await prisma.shop.findFirst();
-
-  if (!shop) {
-
-    shop = await prisma.shop.create({
-      data: {
-        shopName: "Agri Shop",
-        ownerName: "",
-        phone: "",
-        email: "",
-        address: "",
-        gstNumber: "",
-        invoicePrefix: "INV",
-        currency: "₹",
-      },
-    });
-
-  }
-
+// ===========================
+// Upload Logo
+// ===========================
+const uploadLogo = async (shopId, logoPath) => {
   return prisma.shop.update({
     where: {
-      id: shop.id,
+      id: shopId,
     },
     data: {
       logo: logoPath,
     },
   });
-
+  
 };
 
 module.exports = {
   getShop,
   updateShop,
-    uploadLogo,
+  uploadLogo,
 };

@@ -73,7 +73,7 @@ const [selectedLogo, setSelectedLogo] = useState(null);
         {data?.logo ? (
 
         <img
-  src={`http://localhost:5000${data.logo}`}
+  src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${data.logo}`}
   alt="Shop Logo"
   className="w-40 h-40 rounded-xl border bg-white p-2 object-contain shadow"
 />

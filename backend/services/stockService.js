@@ -1,15 +1,19 @@
 const prisma = require("../config/prisma");
 
-const addStock = async ({
-  productId,
-  quantity,
-  remarks,
-  reason,
-}) => {
+const addStock = async (
+  shopId,
+  {
+    productId,
+    quantity,
+    remarks,
+    reason,
+  }
+) => {
   return prisma.$transaction(async (tx) => {
-    const product = await tx.product.findUnique({
+    const product = await tx.product.findFirst({
       where: {
         id: Number(productId),
+        shopId,
       },
     });
 

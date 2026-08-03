@@ -8,10 +8,10 @@ function InvoiceHeader({ shop, invoice }) {
 
           {shop.logo ? (
             <img
-              src={`http://localhost:5000${shop.logo}`}
-              alt="Shop Logo"
-              className="w-16 h-16 object-contain border p-1"
-            />
+  src={`${import.meta.env.VITE_API_URL.replace("/api", "")}${shop.logo}`}
+  alt="Shop Logo"
+  className="w-16 h-16 object-contain border p-1"
+/>
           ) : (
             <div className="w-12 h-12 border rounded-lg flex items-center justify-center text-gray-400 text-xs">
               Logo

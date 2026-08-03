@@ -1,8 +1,13 @@
 const prisma = require("../config/prisma");
 const bcrypt = require("bcrypt");
 
-const getUsers = async () => {
+// ===================== Get Users =====================
+
+const getUsers = async (shopId) => {
   return prisma.user.findMany({
+    where: {
+      shopId,
+    },
     select: {
       id: true,
       name: true,
@@ -16,8 +21,9 @@ const getUsers = async () => {
   });
 };
 
-const createUser = async (data) => {
+// ===================== Create User =====================
 
+const createUser = async (data, shopId) => {
   const existing = await prisma.user.findUnique({
     where: {
       email: data.email,
@@ -36,6 +42,7 @@ const createUser = async (data) => {
       email: data.email,
       password: hashedPassword,
       role: data.role,
+      shopId,
     },
     select: {
       id: true,
@@ -46,7 +53,24 @@ const createUser = async (data) => {
   });
 };
 
-const deleteUser = async (id) => {
+// ===================== Delete User =====================
+
+const deleteUser = async (id, shopId) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      id: Number(id),
+      shopId,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  if (user.role === "ADMIN") {
+    throw new Error("Admin account cannot be deleted");
+  }
+
   return prisma.user.delete({
     where: {
       id: Number(id),
@@ -54,7 +78,19 @@ const deleteUser = async (id) => {
   });
 };
 
-const changePassword = async (id, password) => {
+// ===================== Change Password =====================
+
+const changePassword = async (id, password, shopId) => {
+  const user = await prisma.user.findFirst({
+    where: {
+      id: Number(id),
+      shopId,
+    },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
 
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -66,7 +102,7 @@ const changePassword = async (id, password) => {
       password: hashedPassword,
     },
   });
-
+  
 };
 
 module.exports = {

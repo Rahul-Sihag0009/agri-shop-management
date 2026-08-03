@@ -1,32 +1,24 @@
-const reportService=require("../services/reportService");
+const reportService = require("../services/reportService");
 
-const getSalesReport=async(req,res,next)=>{
+// ===========================
+// Sales Report
+// ===========================
+const getSalesReport = async (req, res, next) => {
+  try {
+    const { startDate, endDate } = req.query;
 
-    try{
+    const report = await reportService.getSalesReport(
+      req.user.shopId,
+      startDate,
+      endDate
+    );
 
-        const{
-            startDate,
-            endDate
-        }=req.query;
-
-        const report=
-        await reportService.getSalesReport(
-            startDate,
-            endDate
-        );
-
-        res.json(report);
-
-    }
-
-    catch(err){
-
-        next(err);
-
-    }
-
+    res.json(report);
+  } catch (err) {
+    next(err);
+  }
 };
 
-module.exports={
-    getSalesReport
+module.exports = {
+  getSalesReport,
 };
