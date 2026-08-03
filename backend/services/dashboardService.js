@@ -1,146 +1,133 @@
 const prisma = require("../config/prisma");
 
-const getDashboardStats = async () => {
-
-    const totalProducts = await prisma.product.count();
-
-    const lowStock = await prisma.product.count({
-        where:{
-            quantity:{
-                lte:5
-            }
-        }
-    });
-
-    const outOfStock = await prisma.product.count({
-        where:{
-            quantity:0
-        }
-    });
-
-    const totalCustomers = await prisma.customer.count();
-
-    const totalSales = await prisma.sale.count();
-
-    const revenue = await prisma.sale.aggregate({
-        _sum:{
-            grandTotal:true
-        }
-    });
-
-    
-
-    return{
-
-        totalProducts,
-
-        
-        lowStock,
-
-        outOfStock,
-
-        totalCustomers,
-
-        totalSales,
-
-        revenue:
-            revenue._sum.grandTotal || 0
-
-    };
-
-};
-
-const getRecentSales = async () => {
-
-    return prisma.sale.findMany({
-
-        orderBy:{
-            createdAt:"desc"
-        },
-
-        take:10,
-
-        include:{
-            customer:true
-        }
-
-    });
-
-};
-
-const getLowStockProducts=async()=>{
-
-    return prisma.product.findMany({
-
-        where:{
-            quantity:{
-                lte:5
-            }
-        },
-
-        orderBy:{
-            quantity:"asc"
-        }
-
-    });
-
-};
-
-const getTopSellingProducts = async () => {
-
-  const products = await prisma.saleItem.groupBy({
-
-    by: ["productId"],
-
-    _sum: {
-      quantity: true,
+// ================= Dashboard Stats =================
+const getDashboardStats = async (shopId) => {
+  const totalProducts = await prisma.product.count({
+    where: {
+      shopId,
     },
-
-    orderBy: {
-      _sum: {
-        quantity: "desc",
-      },
-    },
-
-    take: 5,
   });
 
-  const result = await Promise.all(
+  const lowStock = await prisma.product.count({
+    where: {
+      shopId,
+      quantity: {
+        lte: 5,
+      },
+    },
+  });
 
-    products.map(async (item) => {
+  const outOfStock = await prisma.product.count({
+    where: {
+      shopId,
+      quantity: 0,
+    },
+  });
 
-      const product = await prisma.product.findUnique({
+  const totalCustomers = await prisma.customer.count({
+    where: {
+      shopId,
+    },
+  });
 
-        where: {
-          id: item.productId,
-        },
+  const totalSales = await prisma.sale.count({
+    where: {
+      shopId,
+    },
+  });
 
-        select: {
-          productName: true,
-        },
+  const revenue = await prisma.sale.aggregate({
+    where: {
+      shopId,
+    },
+    _sum: {
+      grandTotal: true,
+    },
+  });
 
-      });
-
-      return {
-
-        id: item.productId,
-
-        productName: product?.productName || "Unknown",
-
-        quantitySold: item._sum.quantity,
-
-      };
-
-    })
-
-  );
-
-  return result;
+  return {
+    totalProducts,
+    lowStock,
+    outOfStock,
+    totalCustomers,
+    totalSales,
+    revenue: revenue._sum.grandTotal || 0,
+  };
 };
 
-const getMonthlySales = async () => {
+// ================= Recent Sales =================
+const getRecentSales = async (shopId) => {
+  return prisma.sale.findMany({
+    where: {
+      shopId,
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+    take: 10,
+    include: {
+      customer: true,
+    },
+  });
+};
 
+// ================= Low Stock =================
+const getLowStockProducts = async (shopId) => {
+  return prisma.product.findMany({
+    where: {
+      shopId,
+      quantity: {
+        lte: 5,
+      },
+    },
+    orderBy: {
+      quantity: "asc",
+    },
+  });
+};
+
+// ================= Top Selling =================
+const getTopSellingProducts = async (shopId) => {
   const sales = await prisma.sale.findMany({
+    where: {
+      shopId,
+    },
+    include: {
+      items: {
+        include: {
+          product: true,
+        },
+      },
+    },
+  });
+
+  const map = {};
+
+  sales.forEach((sale) => {
+    sale.items.forEach((item) => {
+      if (!map[item.productId]) {
+        map[item.productId] = {
+          id: item.productId,
+          productName: item.product.productName,
+          quantitySold: 0,
+        };
+      }
+
+      map[item.productId].quantitySold += item.quantity;
+    });
+  });
+
+  return Object.values(map)
+    .sort((a, b) => b.quantitySold - a.quantitySold)
+    .slice(0, 5);
+};
+
+// ================= Monthly Sales =================
+const getMonthlySales = async (shopId) => {
+  const sales = await prisma.sale.findMany({
+    where: {
+      shopId,
+    },
     select: {
       createdAt: true,
       grandTotal: true,
@@ -159,17 +146,17 @@ const getMonthlySales = async () => {
 
   sales.forEach((sale) => {
     const monthIndex = new Date(sale.createdAt).getMonth();
-
+    
     result[monthIndex].sales += sale.grandTotal;
   });
 
   return result;
 };
 
-module.exports={
-    getDashboardStats,
-    getRecentSales,
-    getLowStockProducts,
-    getTopSellingProducts,
-    getMonthlySales
+module.exports = {
+  getDashboardStats,
+  getRecentSales,
+  getLowStockProducts,
+  getTopSellingProducts,
+  getMonthlySales,
 };

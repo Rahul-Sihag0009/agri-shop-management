@@ -3,7 +3,9 @@ const customerService = require("../services/customerService");
 // GET /api/customers
 const getCustomers = async (req, res, next) => {
   try {
-    const customers = await customerService.getCustomers();
+    const customers = await customerService.getCustomers(
+      req.user.shopId
+    );
 
     res.status(200).json({
       success: true,
@@ -17,7 +19,10 @@ const getCustomers = async (req, res, next) => {
 // GET /api/customers/:id
 const getCustomerById = async (req, res, next) => {
   try {
-    const customer = await customerService.getCustomerById(req.params.id);
+    const customer = await customerService.getCustomerById(
+      req.user.shopId,
+      req.params.id
+    );
 
     if (!customer) {
       return res.status(404).json({
@@ -38,7 +43,10 @@ const getCustomerById = async (req, res, next) => {
 // POST /api/customers
 const createCustomer = async (req, res, next) => {
   try {
-    const customer = await customerService.createCustomer(req.body);
+    const customer = await customerService.createCustomer(
+      req.user.shopId,
+      req.body
+    );
 
     res.status(201).json({
       success: true,
@@ -54,6 +62,7 @@ const createCustomer = async (req, res, next) => {
 const updateCustomer = async (req, res, next) => {
   try {
     const customer = await customerService.updateCustomer(
+      req.user.shopId,
       req.params.id,
       req.body
     );
@@ -71,7 +80,10 @@ const updateCustomer = async (req, res, next) => {
 // DELETE /api/customers/:id
 const deleteCustomer = async (req, res, next) => {
   try {
-    await customerService.deleteCustomer(req.params.id);
+    await customerService.deleteCustomer(
+      req.user.shopId,
+      req.params.id
+    );
 
     res.status(200).json({
       success: true,
@@ -82,9 +94,11 @@ const deleteCustomer = async (req, res, next) => {
   }
 };
 
+// EXPORT CUSTOMER HISTORY
 const exportCustomerHistory = async (req, res, next) => {
   try {
     const history = await customerService.exportCustomerHistory(
+      req.user.shopId,
       req.params.id
     );
 

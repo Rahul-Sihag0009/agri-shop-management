@@ -1,8 +1,12 @@
 const prisma = require("../config/prisma");
 
-const createProduct = async (data) => {
+// ===========================
+// Create Product
+// ===========================
+const createProduct = async (shopId, data) => {
   const existing = await prisma.product.findFirst({
     where: {
+      shopId,
       batchNumber: data.batchNumber,
     },
   });
@@ -16,14 +20,19 @@ const createProduct = async (data) => {
   return prisma.product.create({
     data: {
       ...data,
+      shopId,
       expiryDate: new Date(data.expiryDate),
     },
   });
 };
 
-const getAllProducts = async (search = "") => {
+// ===========================
+// Get All Products
+// ===========================
+const getAllProducts = async (shopId, search = "") => {
   return prisma.product.findMany({
     where: {
+      shopId,
       OR: [
         {
           productName: {
@@ -51,15 +60,49 @@ const getAllProducts = async (search = "") => {
   });
 };
 
-const getProductById = async (id) => {
-  return prisma.product.findUnique({
+// ===========================
+// Get Single Product
+// ===========================
+const getProductById = async (shopId, id) => {
+  return prisma.product.findFirst({
     where: {
       id: Number(id),
+      shopId,
     },
   });
 };
 
-const updateProduct = async (id, data) => {
+// ===========================
+// Update Product
+// ===========================
+const updateProduct = async (shopId, id, data) => {
+  const existing = await prisma.product.findFirst({
+    where: {
+      id: Number(id),
+      shopId,
+    },
+  });
+
+  if (!existing) {
+    throw new Error("Product not found");
+  }
+
+  const duplicate = await prisma.product.findFirst({
+    where: {
+      shopId,
+      batchNumber: data.batchNumber,
+      NOT: {
+        id: Number(id),
+      },
+    },
+  });
+
+  if (duplicate) {
+    const error = new Error("Batch Number already exists.");
+    error.statusCode = 409;
+    throw error;
+  }
+
   return prisma.product.update({
     where: {
       id: Number(id),
@@ -71,7 +114,21 @@ const updateProduct = async (id, data) => {
   });
 };
 
-const deleteProduct = async (id) => {
+// ===========================
+// Delete Product
+// ===========================
+const deleteProduct = async (shopId, id) => {
+  const existing = await prisma.product.findFirst({
+    where: {
+      id: Number(id),
+      shopId,
+    },
+  });
+
+  if (!existing) {
+    throw new Error("Product not found");
+  }
+
   return prisma.product.delete({
     where: {
       id: Number(id),

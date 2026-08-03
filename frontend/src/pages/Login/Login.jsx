@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import toast from "react-hot-toast";
 
 import { login as loginService } from "../../services/authService";
@@ -38,7 +38,8 @@ function Login() {
       navigate("/");
     } catch (err) {
       toast.error(
-        err.response?.data?.message || "Invalid email or password"
+        err.response?.data?.message ||
+          "Invalid email or password"
       );
     } finally {
       setLoading(false);
@@ -50,7 +51,7 @@ function Login() {
       <div className="bg-white w-full max-w-md rounded-2xl shadow-xl p-8">
 
         <h1 className="text-3xl font-bold text-center text-green-700">
-          Agri Shop
+          Agri Shop Management
         </h1>
 
         <p className="text-center text-gray-500 mt-2 mb-8">
@@ -61,7 +62,7 @@ function Login() {
           className="space-y-5"
           onSubmit={handleSubmit}
         >
-
+          
           <input
             type="email"
             name="email"
@@ -90,6 +91,19 @@ function Login() {
           </button>
 
         </form>
+
+        <div className="mt-6 text-center border-t pt-5">
+          <p className="text-gray-600">
+            Don't have an account?
+          </p>
+
+          <Link
+            to="/register"
+            className="inline-block mt-3 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl font-semibold"
+          >
+            Create Shop Account
+          </Link>
+        </div>
 
       </div>
     </div>

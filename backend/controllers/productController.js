@@ -6,7 +6,10 @@ const productService = require("../services/productService");
 
 const addProduct = async (req, res, next) => {
   try {
-    const product = await productService.createProduct(req.body);
+    const product = await productService.createProduct(
+      req.user.shopId,
+      req.body
+    );
 
     res.status(201).json({
       success: true,
@@ -24,6 +27,7 @@ const addProduct = async (req, res, next) => {
 const getProducts = async (req, res, next) => {
   try {
     const products = await productService.getAllProducts(
+      req.user.shopId,
       req.query.search || ""
     );
 
@@ -42,7 +46,10 @@ const getProducts = async (req, res, next) => {
 
 const getProduct = async (req, res, next) => {
   try {
-    const product = await productService.getProductById(req.params.id);
+    const product = await productService.getProductById(
+      req.user.shopId,
+      req.params.id
+    );
 
     if (!product) {
       return res.status(404).json({
@@ -59,6 +66,7 @@ const getProduct = async (req, res, next) => {
     next(err);
   }
 };
+
 // ===========================
 // Update Product
 // ===========================
@@ -66,6 +74,7 @@ const getProduct = async (req, res, next) => {
 const updateProduct = async (req, res, next) => {
   try {
     const product = await productService.updateProduct(
+      req.user.shopId,
       req.params.id,
       req.body
     );
@@ -85,7 +94,10 @@ const updateProduct = async (req, res, next) => {
 
 const deleteProduct = async (req, res, next) => {
   try {
-    await productService.deleteProduct(req.params.id);
+    await productService.deleteProduct(
+      req.user.shopId,
+      req.params.id
+    );
 
     res.json({
       success: true,

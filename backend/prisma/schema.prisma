@@ -26,24 +26,39 @@ enum PaymentMode {
 }
 
 model Product {
-  id            Int      @id @default(autoincrement())
-  productName   String
-  category      String
-  company       String
-  batchNumber   String   @unique
-  expiryDate    DateTime
+  id Int @id @default(autoincrement())
+
+  shopId Int
+
+  productName String
+  category    String
+  company     String
+  batchNumber String
+
+  expiryDate DateTime
+
   purchasePrice Float
   sellingPrice  Float
-  quantity      Int
-  unit          String
-  gst           Float
-  hsnCode       String?
-  minimumStock  Int
-  createdAt     DateTime @default(now())
+
+  quantity Int
+
+  unit String
+
+  gst Float
+
+  hsnCode String?
+
+  minimumStock Int
+
+  createdAt DateTime @default(now())
+
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
 
   stockHistory StockHistory[]
-  saleItems    SaleItem[]
-  
+
+  saleItems SaleItem[]
+
+  @@unique([shopId, batchNumber])
 }
 
 model StockHistory {
@@ -67,21 +82,29 @@ model StockHistory {
 model Customer {
   id Int @id @default(autoincrement())
 
+  shopId Int
+
   name String
 
-  phone String @unique
+  phone String
 
   address String?
 
   createdAt DateTime @default(now())
 
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
   sales Sale[]
+
+  @@unique([shopId, phone])
 }
 
 model Sale {
   id Int @id @default(autoincrement())
 
-  invoiceNumber String @unique
+  shopId Int
+
+  invoiceNumber String
 
   invoiceSequence Int @default(0)
 
@@ -97,9 +120,13 @@ model Sale {
 
   createdAt DateTime @default(now())
 
+  shop Shop @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
   customer Customer? @relation(fields: [customerId], references: [id])
 
   items SaleItem[]
+
+  @@unique([shopId, invoiceNumber])
 }
 
 model SaleItem {
@@ -128,30 +155,35 @@ model User {
   email     String   @unique
   password  String
   role      String   @default("STAFF")
+
+  shopId    Int
+  shop      Shop     @relation(fields: [shopId], references: [id], onDelete: Cascade)
+
   createdAt DateTime @default(now())
 }
 
 
 
 model Shop {
-  id             Int      @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
 
-  shopName       String
-  ownerName      String
+  shopName      String
+  ownerName     String
+  phone         String
+  email         String
+  address       String
 
-  phone          String
-  email          String
+  gstNumber     String?
 
-  address        String
+  invoicePrefix String   @default("INV")
+  currency      String   @default("₹")
+  logo          String?
 
-  gstNumber      String?
+  products      Product[]
+  customers     Customer[]
+  users         User[]
+  sales         Sale[]
 
-  invoicePrefix  String   @default("INV")
-
-  currency       String   @default("₹")
-
-  logo           String?
-
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
 }

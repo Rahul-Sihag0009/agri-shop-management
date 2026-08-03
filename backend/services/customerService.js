@@ -1,8 +1,11 @@
 const prisma = require("../config/prisma");
 
 // Get all customers
-const getCustomers = async () => {
-  return await prisma.customer.findMany({
+const getCustomers = async (shopId) => {
+  return prisma.customer.findMany({
+    where: {
+      shopId,
+    },
     orderBy: {
       createdAt: "desc",
     },
@@ -10,18 +13,20 @@ const getCustomers = async () => {
 };
 
 // Get customer by ID
-const getCustomerById = async (id) => {
-  return await prisma.customer.findUnique({
+const getCustomerById = async (shopId, id) => {
+  return prisma.customer.findFirst({
     where: {
       id: Number(id),
+      shopId,
     },
   });
 };
 
 // Create customer
-const createCustomer = async (data) => {
-  return await prisma.customer.create({
+const createCustomer = async (shopId, data) => {
+  return prisma.customer.create({
     data: {
+      shopId,
       name: data.name,
       phone: data.phone,
       address: data.address,
@@ -30,8 +35,8 @@ const createCustomer = async (data) => {
 };
 
 // Update customer
-const updateCustomer = async (id, data) => {
-  return await prisma.customer.update({
+const updateCustomer = async (shopId, id, data) => {
+  return prisma.customer.update({
     where: {
       id: Number(id),
     },
@@ -44,18 +49,19 @@ const updateCustomer = async (id, data) => {
 };
 
 // Delete customer
-const deleteCustomer = async (id) => {
-  return await prisma.customer.delete({
+const deleteCustomer = async (shopId, id) => {
+  return prisma.customer.delete({
     where: {
       id: Number(id),
     },
   });
 };
 
-const exportCustomerHistory = async (customerId) => {
-  const customer = await prisma.customer.findUnique({
+const exportCustomerHistory = async (shopId, customerId) => {
+  const customer = await prisma.customer.findFirst({
     where: {
       id: Number(customerId),
+      shopId,
     },
     include: {
       sales: {
@@ -77,7 +83,7 @@ const exportCustomerHistory = async (customerId) => {
     throw new Error("Customer not found");
   }
 
-  const history = customer.sales.map((sale) => ({
+  return customer.sales.map((sale) => ({
     customerName: customer.name,
     mobile: customer.phone,
     billNo: sale.invoiceNumber,
@@ -87,8 +93,7 @@ const exportCustomerHistory = async (customerId) => {
       .join(", "),
     amount: sale.grandTotal,
   }));
-
-  return history;
+  
 };
 
 module.exports = {
@@ -98,5 +103,5 @@ module.exports = {
   updateCustomer,
   deleteCustomer,
   exportCustomerHistory,
-  
+
 };

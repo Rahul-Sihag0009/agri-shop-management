@@ -5,26 +5,26 @@ import Products from "./pages/Products/Products";
 import Inventory from "./pages/Inventory/Inventory";
 import Billing from "./pages/Billing/Billing";
 import Customers from "./pages/Customers/Customers";
-
 import Reports from "./pages/Reports/Reports";
 import Settings from "./pages/Settings/Settings";
 import Invoice from "./pages/Invoice/Invoice";
+import Users from "./pages/Users/Users";
 
 import Login from "./pages/Login/Login";
-import Users from "./pages/Users/Users";
+import Register from "./pages/Auth/Register";
 
 import ProtectedRoute from "./routes/ProtectedRoute";
 import RoleProtectedRoute from "./routes/RoleProtectedRoute";
-
 
 function App() {
   return (
     <Routes>
 
-      {/* Login Route */}
+      {/* Public Routes */}
       <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
 
-      {/* Protected Routes */}
+      {/* Dashboard */}
       <Route
         path="/"
         element={
@@ -34,15 +34,17 @@ function App() {
         }
       />
 
+      {/* Products */}
       <Route
-  path="/products"
-  element={
-    <RoleProtectedRoute allowedRoles={["ADMIN"]}>
-      <Products />
-    </RoleProtectedRoute>
-  }
-/>
+        path="/products"
+        element={
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+            <Products />
+          </RoleProtectedRoute>
+        }
+      />
 
+      {/* Inventory */}
       <Route
         path="/inventory"
         element={
@@ -52,6 +54,7 @@ function App() {
         }
       />
 
+      {/* Billing */}
       <Route
         path="/billing"
         element={
@@ -61,6 +64,7 @@ function App() {
         }
       />
 
+      {/* Customers */}
       <Route
         path="/customers"
         element={
@@ -70,28 +74,37 @@ function App() {
         }
       />
 
+      {/* Reports */}
       <Route
-    path="/reports"
-    element={
-        <RoleProtectedRoute
-            allowedRoles={["ADMIN"]}
-        >
+        path="/reports"
+        element={
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
             <Reports />
-        </RoleProtectedRoute>
-    }
-/>
+          </RoleProtectedRoute>
+        }
+      />
 
+      {/* Settings */}
       <Route
-    path="/settings"
-    element={
-        <RoleProtectedRoute
-            allowedRoles={["ADMIN"]}
-        >
+        path="/settings"
+        element={
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
             <Settings />
-        </RoleProtectedRoute>
-    }
-/>
+          </RoleProtectedRoute>
+        }
+      />
 
+      {/* Users */}
+      <Route
+        path="/users"
+        element={
+          <RoleProtectedRoute allowedRoles={["ADMIN"]}>
+            <Users />
+          </RoleProtectedRoute>
+        }
+      />
+
+      {/* Invoice */}
       <Route
         path="/invoice/:saleId"
         element={
@@ -101,15 +114,7 @@ function App() {
         }
       />
 
-      <Route
-  path="/users"
-  element={
-    <RoleProtectedRoute allowedRoles={["ADMIN"]}>
-      <Users />
-    </RoleProtectedRoute>
-  }
-/>
-      {/* Unknown routes */}
+      {/* Unknown Route */}
       <Route path="*" element={<Navigate to="/" replace />} />
 
     </Routes>

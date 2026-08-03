@@ -1,9 +1,8 @@
 const prisma = require("../config/prisma");
 const generateInvoiceNumber = require("../utils/invoiceGenerator");
 
-const createSale = async ({ customer, paymentMode, items }) => {
-if (customer?.phone) {
-
+const createSale = async (shopId, { customer, paymentMode, items }) => {
+  if (customer?.phone) {
     if (!/^[6-9]\d{9}$/.test(customer.phone)) {
 
       throw new Error("Invalid mobile number");
@@ -13,13 +12,16 @@ if (customer?.phone) {
   }
 
   return prisma.$transaction(async (tx) => {
-
+    
     let customerRecord = null;
 
-    // Find or Create Customer
+    // ==========================
+    // Find/Create Customer
+    // ==========================
     if (customer?.phone) {
-      customerRecord = await tx.customer.findUnique({
+      customerRecord = await tx.customer.findFirst({
         where: {
+          shopId,
           phone: customer.phone,
         },
       });
@@ -27,8 +29,10 @@ if (customer?.phone) {
       if (!customerRecord) {
         customerRecord = await tx.customer.create({
           data: {
+            shopId,
             name: customer.name,
             phone: customer.phone,
+            address: customer.address || "",
           },
         });
       }
@@ -39,17 +43,19 @@ if (customer?.phone) {
 
     const productData = [];
 
+    // ==========================
     // Validate Products
+    // ==========================
     for (const item of items) {
-
-      const product = await tx.product.findUnique({
+      const product = await tx.product.findFirst({
         where: {
           id: item.productId,
+          shopId,
         },
       });
 
       if (!product) {
-        throw new Error(`Product ID ${item.productId} not found.`);
+        throw new Error("Product not found");
       }
 
       if (product.quantity < item.quantity) {
@@ -58,57 +64,73 @@ if (customer?.phone) {
         );
       }
 
-      // Selling amount
-const total = product.sellingPrice * item.quantity;
+      const total = product.sellingPrice * item.quantity;
 
-// GST calculated on Purchase Price
-const itemGST =
-  (product.purchasePrice * item.quantity * product.gst) / 100;
+      const itemGST =
+        (product.purchasePrice *
+          item.quantity *
+          product.gst) /
+        100;
 
-// Add to totals
-subtotal += total;
-gst += itemGST;
+      subtotal += total;
+      gst += itemGST;
 
-productData.push({
-  product,
-  quantity: item.quantity,
-  total,
-});
+      productData.push({
+        product,
+        quantity: item.quantity,
+        total,
+      });
     }
 
-// Get shop settings
-const shop = await tx.shop.findFirst();
+    // ==========================
+    // Shop Details
+    // ==========================
+    const shop = await tx.shop.findUnique({
+      where: {
+        id: shopId,
+      },
+    });
 
-// Find the last sale
-const lastSale = await tx.sale.findFirst({
-  orderBy: {
-    invoiceSequence: "desc",
-  },
-});
+    // ==========================
+    // Invoice Sequence
+    // ==========================
+    const lastSale = await tx.sale.findFirst({
+      where: {
+        shopId,
+      },
+      orderBy: {
+        invoiceSequence: "desc",
+      },
+    });
 
-// Next sequence number
-const nextSequence = lastSale
-  ? lastSale.invoiceSequence + 1
-  : 1;
+    const nextSequence = lastSale
+      ? lastSale.invoiceSequence + 1
+      : 1;
 
-// Generate invoice number
-const invoiceNumber = generateInvoiceNumber(
-  shop?.invoicePrefix || "INV",
-  nextSequence
-);
+    const invoiceNumber = generateInvoiceNumber(
+      shop?.invoicePrefix || "INV",
+      nextSequence
+    );
 
-const sale = await tx.sale.create({
-  data: {
-    invoiceNumber,
-    invoiceSequence: nextSequence,
-    customerId: customerRecord?.id,
-    paymentMode,
-    subtotal,
-    gst,
-    grandTotal: subtotal + gst,
-  },
-});
+    // ==========================
+    // Create Sale
+    // ==========================
+    const sale = await tx.sale.create({
+      data: {
+        shopId,
+        invoiceNumber,
+        invoiceSequence: nextSequence,
+        customerId: customerRecord?.id,
+        paymentMode,
+        subtotal,
+        gst,
+        grandTotal: subtotal + gst,
+      },
+    });
 
+    // ==========================
+    // Sale Items + Stock Update
+    // ==========================
     for (const item of productData) {
 
       await tx.saleItem.create({
@@ -147,14 +169,14 @@ const sale = await tx.sale.create({
     return sale;
 
   });
+
 };
 
-const getSaleById = async (id) => {
-
-  return prisma.sale.findUnique({
-
+const getSaleById = async (shopId, id) => {
+  return prisma.sale.findFirst({
     where: {
       id: Number(id),
+      shopId,
     },
 
     include: {
