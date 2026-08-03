@@ -2,6 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
+const protect = require("../middleware/authMiddleware");
+
 const {
   getShop,
   updateShop,
@@ -9,12 +11,25 @@ const {
 } = require("../controllers/shopController");
 
 const upload = require("../middleware/upload");
-router.get("/", getShop);
 
-router.put("/", updateShop);
+// Get Shop
+router.get(
+  "/",
+  protect,
+  getShop
+);
 
+// Update Shop
+router.put(
+  "/",
+  protect,
+  updateShop
+);
+
+// Upload Logo
 router.post(
   "/logo",
+  protect,
   upload.single("logo"),
   uploadLogo
 );
