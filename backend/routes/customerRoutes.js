@@ -18,7 +18,12 @@ router.get("/", protect, adminOnly, getCustomers);
 
 router.get("/:id", protect, adminOnly, getCustomerById);
 
-router.get("/:id/export", exportCustomerHistory);
+router.get(
+  "/:id/export",
+  protect,
+  adminOnly,
+  exportCustomerHistory
+);
 
 router.post("/", protect, adminOnly, createCustomer);
 

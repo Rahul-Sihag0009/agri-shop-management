@@ -2,13 +2,23 @@ const express = require("express");
 
 const router = express.Router();
 
+const protect = require("../middleware/authMiddleware");
+
 const {
   getSettings,
   updateSettings,
 } = require("../controllers/settingController");
 
-router.get("/", getSettings);
+router.get(
+  "/",
+  protect,
+  getSettings
+);
 
-router.put("/", updateSettings);
+router.put(
+  "/",
+  protect,
+  updateSettings
+);
 
 module.exports = router;
