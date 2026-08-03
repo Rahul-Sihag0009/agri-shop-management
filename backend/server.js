@@ -23,7 +23,7 @@ app.use(
   cors({
     origin: [
       "http://localhost:5173",
-      process.env.FRONTEND_URL,
+      "https://agri-shop-management.vercel.app",
     ],
     credentials: true,
   })
